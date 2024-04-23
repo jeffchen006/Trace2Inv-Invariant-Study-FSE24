@@ -1,0 +1,70 @@
+{
+  "name": "@connext/nxtp-sequencer",
+  "version": "2.0.0",
+  "description": "Sequencer for Amarok, previously auctioneer",
+  "author": "Connext",
+  "license": "MIT",
+  "scripts": {
+    "start:all": "concurrently -i -k -c 'green,cyan' npm:start:publisher npm:start:subscriber",
+    "docker:redis:up": "docker run -it --rm --name redis -p 6379:6379 redis",
+    "docker:rabbitmq:up": "docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.10-management",
+    "start": "node dist/index.js",
+    "start:publisher": "node --enable-source-maps dist/publisher.js",
+    "start:subscriber": "node --enable-source-maps dist/subscriber.js",
+    "start:server": "node --enable-source-maps dist/server.js",
+    "lint": "eslint ./src --ext .ts --env node",
+    "test": "nyc ts-mocha --require test/globalTestHook.ts --check-leaks --exit --timeout 120000 'test/**/*.spec.ts'",
+    "clean": "rimraf ./dist ./tsconfig.tsBuildInfo",
+    "build": "tsc --build ./tsconfig.build.json",
+    "verify": "yarn test && yarn clean && yarn build && yarn lint --max-warnings 0",
+    "purge": "yarn clean && rimraf ./node_modules",
+    "tsp": "yarn run tsp:root \"$@\" --cwd $(pwd)",
+    "version": "yarn version"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "gitHead": "937a7cde93e6ac1e151c6374f48adf83d3fa4ec6",
+  "dependencies": {
+    "@connext/nxtp-adapters-cache": "workspace:*",
+    "@connext/nxtp-adapters-database": "workspace:*",
+    "@connext/nxtp-adapters-relayer": "workspace:*",
+    "@connext/nxtp-adapters-subgraph": "workspace:*",
+    "@connext/nxtp-adapters-web3signer": "workspace:*",
+    "@connext/nxtp-txservice": "workspace:*",
+    "@connext/nxtp-utils": "workspace:*",
+    "@sinclair/typebox": "0.25.21",
+    "amqplib": "0.10.3",
+    "dotenv": "16.0.3",
+    "ethers": "5.7.2",
+    "fastify": "4.13.0",
+    "foo-foo-mq": "7.1.0",
+    "interval-promise": "1.4.0",
+    "pg": "8.9.0",
+    "pino": "8.10.0",
+    "prom-client": "14.1.1",
+    "tsc": "2.0.4"
+  },
+  "devDependencies": {
+    "@types/amqplib": "0.10.1",
+    "@types/pg": "8.6.6",
+    "concurrently": "7.6.0",
+    "eslint": "8.34.0",
+    "mocha": "10.2.0",
+    "nodemon": "2.0.20",
+    "nyc": "15.1.0",
+    "pino-pretty": "9.2.0",
+    "rimraf": "3.0.2",
+    "sinon": "15.0.1",
+    "ts-mocha": "10.0.0",
+    "typescript": "4.9.5"
+  },
+  "stableVersion": "0.0.1"
+}

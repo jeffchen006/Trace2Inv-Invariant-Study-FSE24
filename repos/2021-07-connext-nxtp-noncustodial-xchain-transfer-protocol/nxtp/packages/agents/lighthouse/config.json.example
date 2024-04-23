@@ -1,0 +1,33 @@
+{
+  "logLevel": "debug",
+  "hubDomain": "1735353714",
+  "chains": {
+    "1735356532": {
+      "providers": ["https://goerli.optimism.io"]
+    },
+    "1735353714": {
+      "providers": ["https://rpc.ankr.com/eth_goerli"]
+    },
+    "9991": {
+      "providers": ["https://rpc.ankr.com/polygon_mumbai"]
+    },
+    "1734439522": {
+      "providers": ["https://goerli-rollup.arbitrum.io/rpc"]
+    }
+  },
+  "environment": "staging",
+  "database": {
+    "url": "postgres://postgres:postgres@localhost:5432/connext?sslmode=disable"
+  },
+  "databaseWriter": {
+    "url": "postgres://postgres:postgres@localhost:5432/connext?sslmode=disable"
+  },
+  "mnemonic": "test test test test test test test test test test test test",
+  "relayers": [
+    {
+      "type": "Gelato",
+      "apiKey": "***",
+      "url": "https://relay.gelato.digital"
+    }
+  ]
+}

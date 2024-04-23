@@ -1,0 +1,3 @@
+[
+  "constructor(address _upgradeBeacon, bytes _initializationCalldata) payable"
+]

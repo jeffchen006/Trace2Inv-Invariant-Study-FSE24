@@ -1,0 +1,22 @@
+node_modules
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+.idea
+dist
+
+# Hardhat files
+cache
+artifacts
+
+# hardhat-tenderly plugin
+deployments
+
+*.env
+docker
+docker*.tgz
+
+# We don't ever use the generated manifests
+.openzeppelin

@@ -1,0 +1,273 @@
+{
+  "token": [
+    {
+      "tag": "wilder-prod",
+      "address": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+      "version": "ce4272339ef9d2fd9053afea697bed1b1b8c47edaa1726c8e8734df05d3ec518",
+      "date": "2021-05-07T19:16:47.677Z",
+      "args": {
+        "name": "Wilder",
+        "symbol": "WILD"
+      },
+      "isUpgradable": true,
+      "admin": "0xAaCa00D1000AD76960FD5f0A8B6d15587bFC1ab4",
+      "implementation": "0x67AAc030b59d266e754b0b24af9cc77EC2534a37"
+    },
+    {
+      "tag": "zero-prod",
+      "address": "0x0eC78ED49C2D27b315D462d43B5BAB94d2C79bf8",
+      "version": "ce4272339ef9d2fd9053afea697bed1b1b8c47edaa1726c8e8734df05d3ec518",
+      "date": "2021-11-23T00:34:18.732Z",
+      "args": {
+        "name": "ZERO",
+        "symbol": "ZERO"
+      },
+      "isUpgradable": true,
+      "admin": "0x5DC79cF30BDc7eAD0AfD107f3ab3494fB666b86C",
+      "implementation": "0x8540aE9dc0A373d3EA418e2CfAAEaE09051d4093"
+    },
+    {
+      "tag": "degen-prod",
+      "address": "0x45f93404AE1E4f0411a7F42BC6a5Dc395792738D",
+      "version": "ce4272339ef9d2fd9053afea697bed1b1b8c47edaa1726c8e8734df05d3ec518",
+      "date": "2022-12-30T16:17:14.821Z",
+      "args": {
+        "name": "DEGEN",
+        "symbol": "DGEN"
+      },
+      "isUpgradable": true,
+      "admin": "0x0122a448E395cc9602019A2E2B9B7c841B1D61F4",
+      "implementation": "0x8540aE9dc0A373d3EA418e2CfAAEaE09051d4093"
+    }
+  ],
+  "vesting": [
+    {
+      "tag": "wilder-ido",
+      "address": "0x7100BB1C9a114cD2f8DF67F9c9c2a94E6e5070dd",
+      "version": "6d1712a411d10ccdbb23fbede750c38acdee8129c18e946a95c572077f99ba86",
+      "date": "2021-06-20T21:19:36.331Z",
+      "args": {
+        "start": 12376769,
+        "cliff": 303230,
+        "duration": 1516153,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0xfdadc474fad410f5282d4fcdb277b4f515ccac099c0933d09ed67d1ed45142fe"
+      },
+      "isUpgradable": true,
+      "admin": "0xAaCa00D1000AD76960FD5f0A8B6d15587bFC1ab4",
+      "implementation": "0xC6d57d9eDAa69d63950A471f64897f5eC5D84F92",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-ido-merkleTree.json"
+      }
+    },
+    {
+      "tag": "wilder-ido",
+      "address": "0x6E9c63AF66e1F59137214d51ab7716E8dB9D6467",
+      "version": "6d1712a411d10ccdbb23fbede750c38acdee8129c18e946a95c572077f99ba86",
+      "date": "2021-06-20T21:21:47.278Z",
+      "args": {
+        "start": 12376769,
+        "cliff": 303230,
+        "duration": 1516153,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0xfdadc474fad410f5282d4fcdb277b4f515ccac099c0933d09ed67d1ed45142fe"
+      },
+      "isUpgradable": true,
+      "admin": "0xd50d09dE74CdEdeA7060A435D8fDdb481752434C",
+      "implementation": "0x6904D0d33f50e507b982FECeBCEc2dc2fCd8C1F9",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-ido-merkleTree.json"
+      }
+    },
+    {
+      "tag": "wilder-influencers",
+      "address": "0xB7dFcb421412F16B25DDd4AD4bdd73D0883136D8",
+      "version": "6d1712a411d10ccdbb23fbede750c38acdee8129c18e946a95c572077f99ba86",
+      "date": "2021-06-20T21:25:46.663Z",
+      "args": {
+        "start": 12350000,
+        "cliff": 0,
+        "duration": 2370000,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0x5655b48bbae21f8cd5167dd204e523de8fb34ee03ce758a8662657017eca2dfc"
+      },
+      "isUpgradable": true,
+      "admin": "0xE48C6A847bC20Fb5008bfecED249AA1403483E03",
+      "implementation": "0x0EDF408dD8cD5bb388E26766d007591ccB802F06",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-influencers-merkleTree.json"
+      }
+    },
+    {
+      "tag": "wilder-v4",
+      "address": "0xD393224e6EBbFb46C6a09A6Fd8acc596f6392402",
+      "version": "6d1712a411d10ccdbb23fbede750c38acdee8129c18e946a95c572077f99ba86",
+      "date": "2021-07-02T00:11:46.649Z",
+      "args": {
+        "start": 12344976,
+        "cliff": 0,
+        "duration": 2426153,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0xf0aa483ab20a1cc397ec6d68d67877acddcf827525b29219bb44a9d271638caa"
+      },
+      "isUpgradable": true,
+      "admin": "0x6cA959fbc8e3df1fBeA5d9791De0047E1B3a57C6",
+      "implementation": "0x8d52c3bac5FA670B8A1e8d370C00a086946C54bB",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-v4-merkleTree.json"
+      }
+    },
+    {
+      "tag": "wilder-v3",
+      "address": "0x441b52f945B6f3E7D2019f2A0a3537DBA1a7ef87",
+      "version": "6d1712a411d10ccdbb23fbede750c38acdee8129c18e946a95c572077f99ba86",
+      "date": "2021-07-02T00:23:43.629Z",
+      "args": {
+        "start": 12344976,
+        "cliff": 0,
+        "duration": 2426153,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0x932ef63f8d5251fc998f396a4d3ebdac722d775c690fcdbeb63c4c39c1597ce3"
+      },
+      "isUpgradable": true,
+      "admin": "0x6cA959fbc8e3df1fBeA5d9791De0047E1B3a57C6",
+      "implementation": "0x8d52c3bac5FA670B8A1e8d370C00a086946C54bB",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-v3-merkleTree.json"
+      }
+    },
+    {
+      "tag": "polka",
+      "address": "0x0851076f0F05E008337b368fAbD6328CeFeb358B",
+      "version": "6d1712a411d10ccdbb23fbede750c38acdee8129c18e946a95c572077f99ba86",
+      "date": "2021-09-06T17:53:07.355Z",
+      "args": {
+        "start": 12344976,
+        "cliff": 0,
+        "duration": 2426153,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0xd084c636372b80855ce1c164aaa051ecfcef54ed4dabd69e9738cbc373cb6ed7"
+      },
+      "isUpgradable": true,
+      "admin": "0x6cA959fbc8e3df1fBeA5d9791De0047E1B3a57C6",
+      "implementation": "0x8d52c3bac5FA670B8A1e8d370C00a086946C54bB",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-polka-merkleTree.json"
+      }
+    },
+    {
+      "tag": "wilder-sprio",
+      "address": "0x5521D7E4D9AE2294ecDf505fd138b8924Ea7A8E2",
+      "version": "6d1712a411d10ccdbb23fbede750c38acdee8129c18e946a95c572077f99ba86",
+      "date": "2021-10-25T22:04:45.077Z",
+      "args": {
+        "start": 13100000,
+        "cliff": 4706865,
+        "duration": 7060298,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0x787a181432a5a3499f339bba62a65734e706b3ccae22b7b5919931971888e080"
+      },
+      "isUpgradable": true,
+      "admin": "0x6cA959fbc8e3df1fBeA5d9791De0047E1B3a57C6",
+      "implementation": "0x8d52c3bac5FA670B8A1e8d370C00a086946C54bB",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-spiro-merkleTree.json"
+      }
+    },
+    {
+      "tag": "zer0-qdo",
+      "address": "0x956234670110D154Abb591FB46FC3b5A455A3c97",
+      "version": "6d1712a411d10ccdbb23fbede750c38acdee8129c18e946a95c572077f99ba86",
+      "date": "2021-12-01T19:23:48.842Z",
+      "args": {
+        "start": 13344539,
+        "cliff": 403031,
+        "duration": 2687566,
+        "token": "0x0eC78ED49C2D27b315D462d43B5BAB94d2C79bf8",
+        "_merkleRoot": "0x935a87ceb787c89a10520d039b8d3b66db37fc4ce1f315595278b702759ce4f6"
+      },
+      "isUpgradable": true,
+      "admin": "0x0a9a0C44Af4B26Dcb00C295ec21279373cffa26E",
+      "implementation": "0x8d52c3bac5FA670B8A1e8d370C00a086946C54bB",
+      "metadata": {
+        "merkleFile": "merkle/vesting/zeroQDO-merkleTree.json"
+      }
+    },
+    {
+      "tag": "remscar-sign",
+      "address": "0x424D286589b7339867Bb96E7984e2264F2D041bC",
+      "version": "3e48371051e6136809a1de9c869ceecf5fa34b3e96a7600cd5863ac4748dbe57",
+      "date": "2022-05-10T01:37:47.728Z",
+      "args": {
+        "start": 12410000,
+        "cliff": 2353432,
+        "duration": 7060298,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0xe6f4f5e50b54fe1b46cee400fca9faf91b7d341506b772205c68fae15b369699"
+      },
+      "isUpgradable": true,
+      "admin": "0x0122a448E395cc9602019A2E2B9B7c841B1D61F4",
+      "implementation": "0x0d15f364A41D9256C8c81CF664ae32fe75BDf6da",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-dev-remscar-sign-merkleTree.json"
+      }
+    },
+    {
+      "tag": "remscar-may2020-bonus",
+      "address": "0x52fC9eb1BcCE87dfE70Ca40F612899d1D202A139",
+      "version": "334ca8eb0895fd3c5ad8e4803e7996e6b2536f3f7549fd372d67f5afcf1214ee",
+      "date": "2022-05-10T02:00:53.465Z",
+      "args": {
+        "start": 12480000,
+        "cliff": 2344684,
+        "duration": 7060298,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0x505af3ef109adf54ba540abc0d19d52f977da37001d3eef58587e0e71b6528a1"
+      },
+      "isUpgradable": true,
+      "admin": "0x0122a448E395cc9602019A2E2B9B7c841B1D61F4",
+      "implementation": "0x0240cF5cAE6D6dC38C6182bB69fBB3BC7bb1d813",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-dev-remscar-may2020-bonus-merkleTree.json"
+      }
+    },
+    {
+      "tag": "dorg-contract",
+      "address": "0x621863FD50caD605f832c5f4989adA63B536B180",
+      "version": "334ca8eb0895fd3c5ad8e4803e7996e6b2536f3f7549fd372d67f5afcf1214ee",
+      "date": "2022-05-10T02:04:41.686Z",
+      "args": {
+        "start": 12410000,
+        "cliff": 2344684,
+        "duration": 7060298,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0x2d10c57ceacbfba722c60a1a53d60850ea8705270b0db5b3b575b2155285cac0"
+      },
+      "isUpgradable": true,
+      "admin": "0x0122a448E395cc9602019A2E2B9B7c841B1D61F4",
+      "implementation": "0x0240cF5cAE6D6dC38C6182bB69fBB3BC7bb1d813",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-dorg-contract-merkleTree.json"
+      }
+    },
+    {
+      "tag": "zero-qdo-sep2022",
+      "address": "0xC33f704415384d63765e9200cbCfCcF3536fE137",
+      "version": "334ca8eb0895fd3c5ad8e4803e7996e6b2536f3f7549fd372d67f5afcf1214ee",
+      "date": "2022-10-14T20:26:50.735Z",
+      "args": {
+        "start": 15206756,
+        "cliff": 0,
+        "duration": 2951424,
+        "token": "0x0eC78ED49C2D27b315D462d43B5BAB94d2C79bf8",
+        "_merkleRoot": "0x1e00c6105f251859f60b56e0fa60b2bd7bd7a1d3c3fcbef26304b141e7e81078"
+      },
+      "isUpgradable": true,
+      "admin": "0x0122a448E395cc9602019A2E2B9B7c841B1D61F4",
+      "implementation": "0x0240cF5cAE6D6dC38C6182bB69fBB3BC7bb1d813",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\zeroQDO-sep2022-merkleTree.json"
+      }
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+[
+  "function xReceive(bytes32 _transferId, uint256 _amount, address _asset, address _originSender, uint32 _origin, bytes _callData) returns (bytes)"
+]

@@ -1,0 +1,10 @@
+blockhash
+chainid
+delegatecall
+gasleft
+mload
+selfdestruct
+staticcall
+struct
+abicoder
+reinitializer

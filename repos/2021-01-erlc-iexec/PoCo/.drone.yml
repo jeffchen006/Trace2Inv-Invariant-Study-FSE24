@@ -1,0 +1,60 @@
+pipeline:
+  docker_token_parity:
+    image: plugins/docker
+    repo: iexechub/poco-chaintest
+    secrets: [docker_username, docker_password]
+    dockerfile: testchains/Dockerfile_token_parity_no_seal
+    build_args:
+      - DEV_NODE=http://localhost:8545
+      - MNEMONIC=actual surround disorder swim upgrade devote digital misery truly verb slide final
+    auto_tag: true
+    auto_tag_suffix: token-parity
+    when:
+      ref: [refs/tags/v5*, refs/tags/lv5*]
+
+  docker_native_parity:
+    image: plugins/docker
+    repo: iexechub/poco-chaintest
+    secrets: [docker_username, docker_password]
+    dockerfile: testchains/Dockerfile_native_parity_no_seal
+    build_args:
+      - DEV_NODE=http://localhost:8545
+      - MNEMONIC=actual surround disorder swim upgrade devote digital misery truly verb slide final
+    auto_tag: true
+    auto_tag_suffix: native-parity
+    when:
+      ref: [refs/tags/v5*]
+
+  docker_token_ganache:
+    image: plugins/docker
+    repo: iexechub/poco-chaintest
+    secrets: [docker_username, docker_password]
+    dockerfile: testchains/Dockerfile_token_ganache
+    build_args:
+      - MNEMONIC=actual surround disorder swim upgrade devote digital misery truly verb slide final
+    auto_tag: true
+    auto_tag_suffix: token
+    when:
+      ref: [refs/tags/v5*]
+
+  docker_native_ganache:
+    image: plugins/docker
+    repo: iexechub/poco-chaintest
+    secrets: [docker_username, docker_password]
+    dockerfile: testchains/Dockerfile_native_ganache
+    build_args:
+      - MNEMONIC=actual surround disorder swim upgrade devote digital misery truly verb slide final
+    auto_tag: true
+    auto_tag_suffix: native
+    when:
+      ref: [refs/tags/v5*]
+
+  docker_token_1s_ganache:
+    image: plugins/docker
+    repo: iexechub/poco-chaintest
+    secrets: [docker_username, docker_password]
+    dockerfile: testchains/Dockerfile_token_ganache_1s
+    auto_tag: true
+    auto_tag_suffix: token-1s
+    when:
+      ref: [refs/tags/v5*]

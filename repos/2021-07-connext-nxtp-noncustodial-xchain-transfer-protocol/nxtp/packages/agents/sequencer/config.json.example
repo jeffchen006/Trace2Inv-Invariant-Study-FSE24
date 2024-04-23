@@ -1,0 +1,91 @@
+{
+  "logLevel": "debug",
+  "server": {
+    "adminToken": "a"
+  },
+  "chains": {
+    "1735356532": {
+      "providers": ["https://goerli.optimism.io"]
+    },
+    "1735353714": {
+      "providers": ["https://rpc.ankr.com/eth_goerli"]
+    },
+    "9991": {
+      "providers": ["https://matic-mumbai.chainstacklabs.com"]
+    }
+  },
+  "environment": "production",
+  "messageQueue": {
+    "connection": {
+      "uri": "amqp://guest:guest@localhost:5672"
+    },
+    "exchanges": [
+      {
+        "name": "sequencerX",
+        "type": "direct",
+        "publishTimeout": 1000,
+        "persistent": true,
+        "durable": true
+      }
+    ],
+    "queues": [
+      {
+        "name": "http",
+        "limit": 1,
+        "queueLimit": 100000,
+        "subscribe": true
+      },
+      {
+        "name": "1735356532",
+        "limit": 1,
+        "queueLimit": 100000,
+        "subscribe": true
+      },
+      {
+        "name": "1735353714",
+        "limit": 1,
+        "queueLimit": 100000,
+        "subscribe": true
+      },
+      {
+        "name": "9991",
+        "limit": 1,
+        "queueLimit": 100000,
+        "subscribe": true
+      }
+    ],
+    "bindings": [
+      {
+        "exchange": "sequencerX",
+        "target": "http",
+        "keys": ["http"]
+      },
+      {
+        "exchange": "sequencerX",
+        "target": "1735356532",
+        "keys": ["1735356532"]
+      },
+      {
+        "exchange": "sequencerX",
+        "target": "1735353714",
+        "keys": ["1735353714"]
+      },
+      {
+        "exchange": "sequencerX",
+        "target": "9991",
+        "keys": ["9991"]
+      }
+    ],
+    "executerTimeout": 300000,
+    "publisher": "sequencerX"
+  },
+  "mnemonic": "...",
+  "redis": {
+    "host": "localhost",
+    "port": 6379
+  },
+  "relayers": [],
+  "database": {
+    "url": "postgres://postgres:qwerty@localhost:5432/connext?sslmode=disable"
+  }
+}

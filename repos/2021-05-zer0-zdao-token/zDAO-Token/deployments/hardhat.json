@@ -1,0 +1,195 @@
+{
+  "token": [
+    {
+      "tag": "v1",
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "version": "ad837459efd84ba192ccc16829cc42438b595c2b05308dc47d56e0fd9399394e",
+      "date": "2021-04-28T22:35:07.567Z",
+      "args": {
+        "name": "Test Token",
+        "symbol": "TST"
+      },
+      "isUpgradable": true,
+      "admin": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "implementation": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c"
+    },
+    {
+      "tag": "v1",
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "version": "ad837459efd84ba192ccc16829cc42438b595c2b05308dc47d56e0fd9399394e",
+      "date": "2021-04-28T22:35:25.829Z",
+      "args": {
+        "name": "Test Token",
+        "symbol": "TST"
+      },
+      "isUpgradable": true,
+      "admin": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "implementation": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c"
+    },
+    {
+      "tag": "v1",
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "version": "ad837459efd84ba192ccc16829cc42438b595c2b05308dc47d56e0fd9399394e",
+      "date": "2021-04-28T22:38:32.588Z",
+      "args": {
+        "name": "Test Token",
+        "symbol": "TST"
+      },
+      "isUpgradable": true,
+      "admin": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "implementation": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c"
+    },
+    {
+      "tag": "v1",
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "version": "ad837459efd84ba192ccc16829cc42438b595c2b05308dc47d56e0fd9399394e",
+      "date": "2021-04-28T22:38:47.532Z",
+      "args": {
+        "name": "Test Token",
+        "symbol": "TST"
+      },
+      "isUpgradable": true,
+      "admin": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "implementation": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c"
+    },
+    {
+      "tag": "zero-prod",
+      "address": "0xD84379CEae14AA33C123Af12424A37803F885889",
+      "version": "ce4272339ef9d2fd9053afea697bed1b1b8c47edaa1726c8e8734df05d3ec518",
+      "date": "2021-11-23T00:12:58.518Z",
+      "args": {
+        "name": "ZERO",
+        "symbol": "ZERO"
+      },
+      "isUpgradable": true,
+      "admin": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
+      "implementation": "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B"
+    },
+    {
+      "tag": "zero-prod",
+      "address": "0xD84379CEae14AA33C123Af12424A37803F885889",
+      "version": "ce4272339ef9d2fd9053afea697bed1b1b8c47edaa1726c8e8734df05d3ec518",
+      "date": "2021-11-23T00:13:43.548Z",
+      "args": {
+        "name": "ZERO",
+        "symbol": "ZERO"
+      },
+      "isUpgradable": true,
+      "admin": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
+      "implementation": "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B"
+    }
+  ],
+  "vesting": [
+    {
+      "tag": "v1",
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "version": "acde56b3f6a4717b10d1e81b4c6836556dc0ee0870c11117415f5667faf2dc69",
+      "date": "2021-04-28T22:47:02.383Z",
+      "args": {
+        "start": 10,
+        "cliff": 10,
+        "duration": 100,
+        "token": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+        "_merkleRoot": "0x73e9ab882da5e26fbfb0323ad8c171fa34847aedf17518960144a3d7712b8fb0"
+      },
+      "isUpgradable": true,
+      "admin": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "implementation": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+      "metadata": {
+        "merkleFile": ".\\merkle\\airdrop\\example-merkleTree.json"
+      }
+    },
+    {
+      "tag": "v1",
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "version": "acde56b3f6a4717b10d1e81b4c6836556dc0ee0870c11117415f5667faf2dc69",
+      "date": "2021-04-28T22:47:28.260Z",
+      "args": {
+        "start": 11845680,
+        "cliff": 10,
+        "duration": 100,
+        "token": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+        "_merkleRoot": "0x73e9ab882da5e26fbfb0323ad8c171fa34847aedf17518960144a3d7712b8fb0"
+      },
+      "isUpgradable": true,
+      "admin": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "implementation": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+      "metadata": {
+        "merkleFile": ".\\merkle\\airdrop\\example-merkleTree.json"
+      }
+    },
+    {
+      "tag": "v1",
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "version": "acde56b3f6a4717b10d1e81b4c6836556dc0ee0870c11117415f5667faf2dc69",
+      "date": "2021-04-28T22:47:47.197Z",
+      "args": {
+        "start": 11845680,
+        "cliff": 10,
+        "duration": 100,
+        "token": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+        "_merkleRoot": "0x73e9ab882da5e26fbfb0323ad8c171fa34847aedf17518960144a3d7712b8fb0"
+      },
+      "isUpgradable": true,
+      "admin": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "implementation": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+      "metadata": {
+        "merkleFile": ".\\merkle\\airdrop\\example-merkleTree.json"
+      }
+    },
+    {
+      "tag": "remscar-sign",
+      "address": "0xD84379CEae14AA33C123Af12424A37803F885889",
+      "version": "3e48371051e6136809a1de9c869ceecf5fa34b3e96a7600cd5863ac4748dbe57",
+      "date": "2022-05-10T01:35:55.597Z",
+      "args": {
+        "start": 12410000,
+        "cliff": 2353432,
+        "duration": 7060298,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0xe6f4f5e50b54fe1b46cee400fca9faf91b7d341506b772205c68fae15b369699"
+      },
+      "isUpgradable": true,
+      "admin": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
+      "implementation": "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-dev-remscar-sign-merkleTree.json"
+      }
+    },
+    {
+      "tag": "remscar-may2020-bonus",
+      "address": "0xD84379CEae14AA33C123Af12424A37803F885889",
+      "version": "334ca8eb0895fd3c5ad8e4803e7996e6b2536f3f7549fd372d67f5afcf1214ee",
+      "date": "2022-05-10T01:52:30.430Z",
+      "args": {
+        "start": 12480000,
+        "cliff": 2344684,
+        "duration": 7060298,
+        "token": "0x2a3bFF78B79A009976EeA096a51A948a3dC00e34",
+        "_merkleRoot": "0x505af3ef109adf54ba540abc0d19d52f977da37001d3eef58587e0e71b6528a1"
+      },
+      "isUpgradable": true,
+      "admin": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
+      "implementation": "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B",
+      "metadata": {
+        "merkleFile": ".\\merkle\\vesting\\wilder-dev-remscar-may2020-bonus-merkleTree.json"
+      }
+    }
+  ],
+  "airdrop": [
+    {
+      "tag": "v1",
+      "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+      "version": "bf242125087ade969b5883801f82235460fa0f751dbe83015b5f0181625231ec",
+      "date": "2021-04-28T22:55:59.484Z",
+      "args": {
+        "token_": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+        "merkleRoot_": "0x73e9ab882da5e26fbfb0323ad8c171fa34847aedf17518960144a3d7712b8fb0"
+      },
+      "isUpgradable": false,
+      "metadata": {
+        "merkleFile": ".\\merkle\\airdrop\\example-merkleTree.json"
+      }
+    }
+  ]
+}

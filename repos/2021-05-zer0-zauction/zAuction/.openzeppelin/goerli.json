@@ -1,0 +1,345 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0xB885055149A5bdDD48F8B5779FEea5217E28b3B9",
+    "txHash": "0x8c7ac90e23aa7e07b0da85393621368406e91dbec8ab08ac3c71e450a4fdb779"
+  },
+  "proxies": [
+    {
+      "address": "0x78764080e4Fb36CB24487d3Ca8e3aa92cD7C58fc",
+      "txHash": "0x44952467ebc29244aaea5d23783738ba8d3e280bb5341facd97160a1c6ae1111",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "d3b28e9203798aa3f6868d7687ccd50f59e5ec3b519c84acf6cd2e836b80f375": {
+      "address": "0x3Ae5d499cfb8FB645708CC6DA599C90e64b33A79",
+      "txHash": "0xe84e0787328c3cb63d8d64a350a8c29b55b06ca05b46fd230a3c9d20b245e1a7",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:28"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:31"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:20"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:74"
+          },
+          {
+            "contract": "ZAuction",
+            "label": "token",
+            "type": "t_contract(IERC20)299",
+            "src": "contracts\\Zauction.sol:16"
+          },
+          {
+            "contract": "ZAuction",
+            "label": "registrar",
+            "type": "t_contract(IRegistrar)1132",
+            "src": "contracts\\Zauction.sol:19"
+          },
+          {
+            "contract": "ZAuction",
+            "label": "priceInfo",
+            "type": "t_mapping(t_uint256,t_struct(Listing)1272_storage)",
+            "src": "contracts\\Zauction.sol:26"
+          },
+          {
+            "contract": "ZAuction",
+            "label": "consumed",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_bool))",
+            "src": "contracts\\Zauction.sol:27"
+          },
+          {
+            "contract": "ZAuction",
+            "label": "topLevelDomainIdCache",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "contracts\\Zauction.sol:28"
+          },
+          {
+            "contract": "ZAuction",
+            "label": "topLevelDomainFee",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "contracts\\Zauction.sol:29"
+          },
+          {
+            "contract": "ZAuction",
+            "label": "hub",
+            "type": "t_contract(IZNSHub)1241",
+            "src": "contracts\\Zauction.sol:54"
+          }
+        ],
+        "types": {
+          "t_contract(IERC20)299": {
+            "label": "contract IERC20"
+          },
+          "t_contract(IRegistrar)1132": {
+            "label": "contract IRegistrar"
+          },
+          "t_mapping(t_uint256,t_struct(Listing)1272_storage)": {
+            "label": "mapping(uint256 => struct ZAuction.Listing)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_struct(Listing)1272_storage": {
+            "label": "struct ZAuction.Listing",
+            "members": [
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "holder",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_bool))": {
+            "label": "mapping(address => mapping(uint256 => bool))"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_contract(IZNSHub)1241": {
+            "label": "contract IZNSHub"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "37c3a148eb18c9be35291fb196ebcf85a5b489a6b38cdcd78e6950ce4439fa8a": {
+      "address": "0xc7cb8C3B705d574CA97507162a697EF6aF9A4941",
+      "txHash": "0x9b1fe737c3958bb6e0aeb382fa1f66d19676a440289df61f2abe43f87e237906",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:23"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:28"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:31"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:20"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:74"
+          },
+          {
+            "label": "defaultPaymentToken",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_contract(IERC20)3129",
+            "contract": "ZAuction",
+            "src": "contracts\\Zauction.sol:18"
+          },
+          {
+            "label": "registrar",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_contract(IRegistrar)1192",
+            "contract": "ZAuction",
+            "src": "contracts\\Zauction.sol:21"
+          },
+          {
+            "label": "priceInfo",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_mapping(t_uint256,t_struct(Listing)1336_storage)",
+            "contract": "ZAuction",
+            "src": "contracts\\Zauction.sol:29"
+          },
+          {
+            "label": "consumed",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_bool))",
+            "contract": "ZAuction",
+            "src": "contracts\\Zauction.sol:30"
+          },
+          {
+            "label": "topLevelDomainIdCache",
+            "offset": 0,
+            "slot": "105",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ZAuction",
+            "src": "contracts\\Zauction.sol:31"
+          },
+          {
+            "label": "topLevelDomainFee",
+            "offset": 0,
+            "slot": "106",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ZAuction",
+            "src": "contracts\\Zauction.sol:32"
+          },
+          {
+            "label": "hub",
+            "offset": 0,
+            "slot": "107",
+            "type": "t_contract(IZNSHub)1301",
+            "contract": "ZAuction",
+            "src": "contracts\\Zauction.sol:85"
+          },
+          {
+            "label": "networkPaymentToken",
+            "offset": 0,
+            "slot": "108",
+            "type": "t_mapping(t_uint256,t_contract(IERC20)3129)",
+            "contract": "ZAuction",
+            "src": "contracts\\Zauction.sol:88"
+          },
+          {
+            "label": "wildToken",
+            "offset": 0,
+            "slot": "109",
+            "type": "t_contract(IERC20)3129",
+            "contract": "ZAuction",
+            "src": "contracts\\Zauction.sol:91"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IERC20)3129": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IRegistrar)1192": {
+            "label": "contract IRegistrar",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IZNSHub)1301": {
+            "label": "contract IZNSHub",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_bool))": {
+            "label": "mapping(address => mapping(uint256 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_contract(IERC20)3129)": {
+            "label": "mapping(uint256 => contract IERC20)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Listing)1336_storage)": {
+            "label": "mapping(uint256 => struct ZAuction.Listing)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Listing)1336_storage": {
+            "label": "struct ZAuction.Listing",
+            "members": [
+              {
+                "label": "price",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "holder",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "paymentToken",
+                "type": "t_contract(IERC20)3129",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    }
+  }
+}

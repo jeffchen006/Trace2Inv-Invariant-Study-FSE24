@@ -1,0 +1,833 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0xE10CC02d4D633e77E1c544387bF31813571CF016",
+    "txHash": "0xa433c7554eaefbd48c2ade7b45e33f52a2605d67d6f3fce0778c675f7d6bc620"
+  },
+  "proxies": [
+    {
+      "address": "0x791311D130B8c7E92B20AaD5cF63C48aDEF42Efb",
+      "txHash": "0x98e2635b4895fb97a40e4568ea76a48afa7df574b36f5451752575d3b3c00890",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x03BD587Fe413D59A20F32Fc75f31bDE1dD1CD6c9",
+      "txHash": "0xca494d270c5f34d628ec85ba63abe8ec3eef7aea0f118ffefd5e020195c80347",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xFd4be23fe3e72A43680aE5C42C26f53b95969cF8",
+      "txHash": "0xd83aba08ca3f9969a55baa3051edf444a828560ff1360562d70c54254efcc1c6",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xaa98909937a95B46285d5D7EFFCCD0A50E614eCf",
+      "txHash": "0xd4971bde748404625307b738d1d06b2a78a06c45de1f78528718053196bd4e76",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xbF4506f4e3eE2eB563F014f445a15685FeD1A4db",
+      "txHash": "0x4f33b191882862123ec1edcacfffc09b212ef9e6c44c6c31018eeeaeeb3ae165",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xd9D55aE4691Ac43a2c4030AcF3DD4d7DbDB8D3cf",
+      "txHash": "0x7a6d9b1f5cead7ed405f5e2f8baef91c9f0298976898da3c2f04ea7217d8ad7c",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x158bE3b7D203688073Dc51d7914F93a30B0A66aD",
+      "txHash": "0x435219d5d695d7b865eb490c20fa955cf6308bc50078db9ef2f7bb21bbc5b944",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xAf7460560Cf90232368918B5c40a53f1Ef5fB087",
+      "txHash": "0x72b49b21516f3ccf17b1b5b48d23730a83c0c710ffb09c372fbe2002a21a036f",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x7D5430A3b1b7E5e6F9d53f720cF6243D3CB30CfB",
+      "txHash": "0x0512c8f777b68c12ff50fd6e9bad27beefb042435b15d3ba5f1c0916be0cd547",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xBc2131B75C5c634a20e14239c34fC6102aBdEd00",
+      "txHash": "0xe2862d7af6cebe9c544a7e98a435fd3610a421638c6c292a7a15fb623c71ba7a",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "01795091122690e37a1e2ab243654e99834a1e07855487a0f1ce27cd36c4c218": {
+      "address": "0x124e9cd869b28196ee431875f70b34a002788ce2",
+      "txHash": "0xfb83f129eced64f7ee403ffbd98d5579e65d096e67c58836b23fd9bb04308c46",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "contract": "FujiAdmin",
+            "label": "_flasher",
+            "type": "t_address",
+            "src": "contracts/FujiAdmin.sol:14"
+          },
+          {
+            "contract": "FujiAdmin",
+            "label": "_fliquidator",
+            "type": "t_address",
+            "src": "contracts/FujiAdmin.sol:15"
+          },
+          {
+            "contract": "FujiAdmin",
+            "label": "_ftreasury",
+            "type": "t_address_payable",
+            "src": "contracts/FujiAdmin.sol:16"
+          },
+          {
+            "contract": "FujiAdmin",
+            "label": "_controller",
+            "type": "t_address",
+            "src": "contracts/FujiAdmin.sol:17"
+          },
+          {
+            "contract": "FujiAdmin",
+            "label": "_vaultHarvester",
+            "type": "t_address",
+            "src": "contracts/FujiAdmin.sol:18"
+          },
+          {
+            "contract": "FujiAdmin",
+            "label": "validVault",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "contracts/FujiAdmin.sol:20"
+          },
+          {
+            "contract": "FujiAdmin",
+            "label": "_swapper",
+            "type": "t_address",
+            "src": "contracts/FujiAdmin.sol:22"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "6daac48a47278ac5c178ef741282d59db614b0318c7b2e4aa2b06704ed45ca26": {
+      "address": "0x8b7b60ad0616947a21f33c86f0676378af2ef151",
+      "txHash": "0x5588cba5ef11c9decaee38900f038fc686ca6064d539f7344f818f52f6c31a86",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "contract": "ERC165Upgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:41"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "contract": "FujiBaseERC1155",
+            "label": "_balances",
+            "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+            "src": "contracts/abstracts/fujiERC1155/FujiBaseERC1155.sol:34"
+          },
+          {
+            "contract": "FujiBaseERC1155",
+            "label": "_operatorApprovals",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "src": "contracts/abstracts/fujiERC1155/FujiBaseERC1155.sol:37"
+          },
+          {
+            "contract": "FujiBaseERC1155",
+            "label": "_totalSupply",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "contracts/abstracts/fujiERC1155/FujiBaseERC1155.sol:40"
+          },
+          {
+            "contract": "FujiBaseERC1155",
+            "label": "_uri",
+            "type": "t_string_storage",
+            "src": "contracts/abstracts/fujiERC1155/FujiBaseERC1155.sol:44"
+          },
+          {
+            "contract": "ClaimableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "contracts/abstracts/claimable/ClaimableUpgradeable.sol:13"
+          },
+          {
+            "contract": "ClaimableUpgradeable",
+            "label": "pendingOwner",
+            "type": "t_address",
+            "src": "contracts/abstracts/claimable/ClaimableUpgradeable.sol:15"
+          },
+          {
+            "contract": "F1155Manager",
+            "label": "addrPermit",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "contracts/abstracts/fujiERC1155/F1155Manager.sol:29"
+          },
+          {
+            "contract": "FujiERC1155",
+            "label": "assetIDs",
+            "type": "t_mapping(t_enum(AssetType)33900,t_mapping(t_address,t_uint256))",
+            "src": "contracts/FujiERC1155.sol:25"
+          },
+          {
+            "contract": "FujiERC1155",
+            "label": "assetIDtype",
+            "type": "t_mapping(t_uint256,t_enum(AssetType)33900)",
+            "src": "contracts/FujiERC1155.sol:28"
+          },
+          {
+            "contract": "FujiERC1155",
+            "label": "qtyOfManagedAssets",
+            "type": "t_uint64",
+            "src": "contracts/FujiERC1155.sol:30"
+          },
+          {
+            "contract": "FujiERC1155",
+            "label": "indexes",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "contracts/FujiERC1155.sol:34"
+          }
+        ],
+        "types": {
+          "t_mapping(t_enum(AssetType)33900,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(enum IFujiERC1155.AssetType => mapping(address => uint256))"
+          },
+          "t_enum(AssetType)33900": {
+            "label": "enum IFujiERC1155.AssetType",
+            "members": [
+              "collateralToken",
+              "debtToken"
+            ]
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_uint256,t_enum(AssetType)33900)": {
+            "label": "mapping(uint256 => enum IFujiERC1155.AssetType)"
+          },
+          "t_uint64": {
+            "label": "uint64"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint256,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(uint256 => mapping(address => uint256))"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "df18d1c113bdfa24fc5cb2b4a2c96e99e2b013366bc51d9a05583029e7bb835c": {
+      "address": "0x01267E6b6EC2196c6E21a64A7F3e3211F10cCcAe",
+      "txHash": "0x3772531134ccdd42fed9c214810923f76f74665b9ecc2513ca6f74d33d85a8a7",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          },
+          {
+            "contract": "PausableUpgradeable",
+            "label": "_paused",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "contract": "PausableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:102"
+          },
+          {
+            "contract": "VaultControlUpgradeable",
+            "label": "vAssets",
+            "type": "t_struct(VaultAssets)34371_storage",
+            "src": "contracts/abstracts/vault/VaultBaseUpgradeable.sol:20"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "safetyF",
+            "type": "t_struct(Factor)34235_storage",
+            "src": "contracts/F2FujiVault.sol:34"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "collatF",
+            "type": "t_struct(Factor)34235_storage",
+            "src": "contracts/F2FujiVault.sol:37"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "protocolFee",
+            "type": "t_struct(Factor)34235_storage",
+            "src": "contracts/F2FujiVault.sol:40"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "bonusLiqF",
+            "type": "t_struct(Factor)34235_storage",
+            "src": "contracts/F2FujiVault.sol:43"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "providers",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "contracts/F2FujiVault.sol:46"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "activeProvider",
+            "type": "t_address",
+            "src": "contracts/F2FujiVault.sol:47"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "_fujiAdmin",
+            "type": "t_contract(IFujiAdmin)33895",
+            "src": "contracts/F2FujiVault.sol:49"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "fujiERC1155",
+            "type": "t_address",
+            "src": "contracts/F2FujiVault.sol:50"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "oracle",
+            "type": "t_contract(IFujiOracle)34029",
+            "src": "contracts/F2FujiVault.sol:51"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "name",
+            "type": "t_string_storage",
+            "src": "contracts/F2FujiVault.sol:53"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "_collateralAssetDecimals",
+            "type": "t_uint8",
+            "src": "contracts/F2FujiVault.sol:55"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "_borrowAssetDecimals",
+            "type": "t_uint8",
+            "src": "contracts/F2FujiVault.sol:56"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "_userFeeTimestamps",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/F2FujiVault.sol:60"
+          },
+          {
+            "contract": "F2FujiVault",
+            "label": "remainingProtocolFee",
+            "type": "t_uint256",
+            "src": "contracts/F2FujiVault.sol:61"
+          }
+        ],
+        "types": {
+          "t_struct(Factor)34235_storage": {
+            "label": "struct IVault.Factor",
+            "members": [
+              {
+                "label": "a",
+                "type": "t_uint64"
+              },
+              {
+                "label": "b",
+                "type": "t_uint64"
+              }
+            ]
+          },
+          "t_uint64": {
+            "label": "uint64"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_contract(IFujiAdmin)33895": {
+            "label": "contract IFujiAdmin"
+          },
+          "t_contract(IFujiOracle)34029": {
+            "label": "contract IFujiOracle"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_struct(VaultAssets)34371_storage": {
+            "label": "struct IVaultControl.VaultAssets",
+            "members": [
+              {
+                "label": "collateralAsset",
+                "type": "t_address"
+              },
+              {
+                "label": "borrowAsset",
+                "type": "t_address"
+              },
+              {
+                "label": "collateralID",
+                "type": "t_uint64"
+              },
+              {
+                "label": "borrowID",
+                "type": "t_uint64"
+              }
+            ]
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "d3f3ec0eb6370a34e24f0387b4c69fe7a697809780ab55dcc30be70285788d31": {
+      "address": "0x25d7E3950AD41F28906E8D8D3a1eDf80Afafc00D",
+      "txHash": "0x152a604705b466af360438c93a7545a9fdaab5e81d4e28db05e698639284347b",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:87"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\PausableUpgradeable.sol:102"
+          },
+          {
+            "label": "vAssets",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_struct(VaultAssets)35938_storage",
+            "contract": "VaultControlUpgradeable",
+            "src": "contracts\\abstracts\\vault\\VaultBaseUpgradeable.sol:20"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "label": "safetyF",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_struct(Factor)35802_storage",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:34"
+          },
+          {
+            "label": "collatF",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_struct(Factor)35802_storage",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:37"
+          },
+          {
+            "label": "protocolFee",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_struct(Factor)35802_storage",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:40"
+          },
+          {
+            "label": "bonusLiqF",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_struct(Factor)35802_storage",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:43"
+          },
+          {
+            "label": "providers",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:46"
+          },
+          {
+            "label": "activeProvider",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_address",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:47"
+          },
+          {
+            "label": "_fujiAdmin",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_contract(IFujiAdmin)35462",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:49"
+          },
+          {
+            "label": "fujiERC1155",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_address",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:50"
+          },
+          {
+            "label": "oracle",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_contract(IFujiOracle)35596",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:51"
+          },
+          {
+            "label": "name",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_string_storage",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:53"
+          },
+          {
+            "label": "_collateralAssetDecimals",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_uint8",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:55"
+          },
+          {
+            "label": "_borrowAssetDecimals",
+            "offset": 1,
+            "slot": "214",
+            "type": "t_uint8",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:56"
+          },
+          {
+            "label": "_userFeeTimestamps",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:60"
+          },
+          {
+            "label": "remainingProtocolFee",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_uint256",
+            "contract": "F2FujiVault",
+            "src": "contracts\\F2FujiVault.sol:61"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IFujiAdmin)35462": {
+            "label": "contract IFujiAdmin",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IFujiOracle)35596": {
+            "label": "contract IFujiOracle",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Factor)35802_storage": {
+            "label": "struct IVault.Factor",
+            "members": [
+              {
+                "label": "a",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "b",
+                "type": "t_uint64",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(VaultAssets)35938_storage": {
+            "label": "struct IVaultControl.VaultAssets",
+            "members": [
+              {
+                "label": "collateralAsset",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "borrowAsset",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "collateralID",
+                "type": "t_uint64",
+                "offset": 20,
+                "slot": "1"
+              },
+              {
+                "label": "borrowID",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}

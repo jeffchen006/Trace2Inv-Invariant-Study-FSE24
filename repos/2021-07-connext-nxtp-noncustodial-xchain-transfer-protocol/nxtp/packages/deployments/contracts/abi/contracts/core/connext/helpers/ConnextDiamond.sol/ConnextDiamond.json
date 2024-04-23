@@ -1,0 +1,4 @@
+[
+  "constructor(address _contractOwner, tuple(address facetAddress, uint8 action, bytes4[] functionSelectors)[] _diamondCut, tuple(address initContract, bytes initData)[] _initializations) payable",
+  "error ConnextDiamond__fallback_facetNotExit()"
+]

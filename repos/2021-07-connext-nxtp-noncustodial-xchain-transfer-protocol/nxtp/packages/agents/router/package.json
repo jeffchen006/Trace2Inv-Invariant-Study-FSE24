@@ -1,0 +1,60 @@
+{
+  "name": "@connext/nxtp-router",
+  "version": "2.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
+  "scripts": {
+    "start:all": "concurrently -i -k -c 'green,cyan,yellow' npm:start:publisher npm:start:subscriber npm:start:executor",
+    "start:publisher": "node --enable-source-maps dist/tasks/publisher/index.js",
+    "start:subscriber": "node --enable-source-maps dist/tasks/subscriber/index.js",
+    "start:executor": "node --enable-source-maps dist/tasks/executor/index.js",
+    "lint": "eslint ./src --ext .ts --env node",
+    "test": "nyc ts-mocha --require test/globalTestHook.ts --check-leaks --exit --timeout 60000 'test/**/*.spec.ts'",
+    "clean": "rimraf ./dist ./tsconfig.tsBuildInfo",
+    "build": "tsc --build ./tsconfig.build.json",
+    "verify": "yarn test && yarn clean && yarn build && yarn lint --max-warnings 0",
+    "purge": "yarn clean && rimraf ./coverage ./node_modules",
+    "tsp": "yarn run tsp:root \"$@\" --cwd $(pwd)",
+    "version": "yarn version"
+  },
+  "author": "Connext",
+  "license": "ISC",
+  "dependencies": {
+    "@connext/nxtp-adapters-cache": "workspace:*",
+    "@connext/nxtp-adapters-subgraph": "workspace:*",
+    "@connext/nxtp-adapters-web3signer": "workspace:*",
+    "@connext/nxtp-txservice": "workspace:*",
+    "@connext/nxtp-utils": "workspace:*",
+    "@sinclair/typebox": "0.25.21",
+    "compare-versions": "6.0.0-rc.1",
+    "dotenv": "16.0.3",
+    "ethers": "5.7.2",
+    "fastify": "4.13.0",
+    "foo-foo-mq": "7.1.0",
+    "graphql": "16.6.0",
+    "prom-client": "14.1.1"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "3.0.0",
+    "@types/mocha": "10.0.1",
+    "@types/sinon": "10.0.13",
+    "concurrently": "7.6.0",
+    "eslint": "8.34.0",
+    "interval-promise": "1.4.0",
+    "mocha": "10.2.0",
+    "nodemon": "2.0.20",
+    "nyc": "15.1.0",
+    "pino-pretty": "9.2.0",
+    "rimraf": "3.0.2",
+    "sinon": "15.0.1",
+    "ts-mocha": "10.0.0",
+    "typescript": "4.9.5"
+  },
+  "gitHead": "937a7cde93e6ac1e151c6374f48adf83d3fa4ec6",
+  "stableVersion": "0.1.25"
+}

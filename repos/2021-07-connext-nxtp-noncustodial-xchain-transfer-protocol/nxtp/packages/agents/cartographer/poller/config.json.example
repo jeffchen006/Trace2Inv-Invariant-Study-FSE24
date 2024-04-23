@@ -1,0 +1,10 @@
+{
+  "logLevel": "debug",
+  "chains": {
+    "1735353714": {},
+    "1735356532": {},
+    "1734439522": {}
+  },
+  "environment": "staging",
+  "databaseUrl": "postgres://postgres:postgres@localhost:5432/connext",
+}

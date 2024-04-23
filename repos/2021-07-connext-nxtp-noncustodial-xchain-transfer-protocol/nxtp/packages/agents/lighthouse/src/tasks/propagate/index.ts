@@ -1,0 +1,1 @@
+export { makePropagate } from "./propagate";

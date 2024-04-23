@@ -1,0 +1,1483 @@
+name: E2E Workflow for Connext
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - testnet-prod
+      - prod
+  pull_request:
+  create:
+    tag:
+      - "sdk-v*"
+      - "contracts-v*"
+      - "router-v*"
+      - "watcher-v*"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    env:
+      DATABASE_URL: postgres://postgres:qwerty@localhost:5432/connext?sslmode=disable
+
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: ghcr.io/connext/database:sha-fa66dca
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: qwerty
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Foundry
+        uses: onbjerg/foundry-toolchain@v1
+        with:
+          version: nightly-87bc53fc6c874bd4c92d97ed180b949e3a36d78c
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Check Yarn version
+        run: yarn --version
+
+      # - name: Validate using commitlint
+      #   if: github.ref != 'refs/heads/testnet-prod' || github.ref != 'refs/heads/prod'
+      #   uses: wagoid/commitlint-github-action@v5
+      #   with:
+      #     commitDepth: 1
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Forge install
+        run: yarn workspace @connext/smart-contracts forge:install
+
+      - name: Yarn build
+        run: yarn build:all
+
+      - name: Install DBMate
+        run: sudo curl -fsSL -o /usr/local/bin/dbmate https://github.com/amacneil/dbmate/releases/latest/download/dbmate-linux-amd64 && sudo chmod +x /usr/local/bin/dbmate
+
+      - name: Migrate Database
+        run: yarn workspace @connext/nxtp-adapters-database dbmate up
+
+      - name: Yarn test
+        run: yarn test:all
+
+      - name: Yarn lint
+        env:
+          NODE_OPTIONS: "--max-old-space-size=12288"
+        run: yarn lint:all
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Extract version, determine tag, and publish SDK
+        if: ${{ startsWith(github.ref, 'refs/tags/sdk-v') }}
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          workspaces=(
+            "packages/utils:@connext/nxtp-utils"
+            "packages/deployments/contracts:@connext/smart-contracts"
+            "packages/adapters/txservice:@connext/nxtp-txservice"
+            "packages/adapters/subgraph:@connext/nxtp-adapters-subgraph"
+            "packages/adapters/cache:@connext/nxtp-adapters-cache"
+            "packages/agents/sdk:@connext/sdk-core"
+            "packages/agents/sdk-wrapper:@connext/sdk"
+          )
+
+          for entry in "${workspaces[@]}"; do
+            IFS=":"; read -ra split_entry <<< "$entry"
+            directory="${split_entry[0]}"
+            workspace="${split_entry[1]}"
+            subpackage_version=$(cat $directory/package.json | jq -r '.version')
+
+            tag=""
+            if [[ "$subpackage_version" == *"-alpha"* ]]; then
+              tag="alpha"
+            elif [[ "$subpackage_version" == *"-beta"* ]]; then
+              tag="beta"
+            fi
+
+            echo "Checking $workspace for existing version..."
+            npm_package_info=$(npm view $workspace versions --json)
+
+            if [[ -z "$tag" ]]; then
+              # "stable" is not explicitly in the version name for stable releases
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"-\") | not)" | tail -1)
+            else
+              # pre-release versions have the tag in the version name
+              base_version=$(echo "$subpackage_version" | sed 's/-.*//')
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"^${base_version}-${tag}\"))" | tail -1)
+            fi
+
+            echo "Compare version in NPM ($last_version) against local version ($subpackage_version)"
+            if [[ "$last_version" != "$subpackage_version" ]]; then
+              echo "Publishing $workspace with version $subpackage_version"
+              if [[ ! -z "$tag" ]]; then
+                yarn workspace $workspace npm publish --access public --tag $tag
+              else
+                yarn workspace $workspace npm publish --access public
+              fi
+            else
+              echo "Skipping $workspace as version $subpackage_version already exists"
+            fi
+          done
+
+      - name: Extract version, determine tag, and publish contracts
+        if: ${{ startsWith(github.ref, 'refs/tags/contracts-v') }}
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          workspaces=(
+            "packages/utils:@connext/nxtp-utils"
+            "packages/deployments/contracts:@connext/smart-contracts"
+          )
+
+          for entry in "${workspaces[@]}"; do
+            IFS=":"; read -ra split_entry <<< "$entry"
+            directory="${split_entry[0]}"
+            workspace="${split_entry[1]}"
+            subpackage_version=$(cat $directory/package.json | jq -r '.version')
+
+            tag=""
+            if [[ "$subpackage_version" == *"-alpha"* ]]; then
+              tag="alpha"
+            elif [[ "$subpackage_version" == *"-beta"* ]]; then
+              tag="beta"
+            fi
+
+            echo "Checking $workspace for existing version..."
+            npm_package_info=$(npm view $workspace versions --json)
+
+            if [[ -z "$tag" ]]; then
+              # "stable" is not explicitly in the version name for stable releases
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"-\") | not)" | tail -1)
+            else
+              # pre-release versions have the tag in the version name
+              base_version=$(echo "$subpackage_version" | sed 's/-.*//')
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"^${base_version}-${tag}\"))" | tail -1)
+            fi
+
+            echo "Compare version in NPM ($last_version) against local version ($subpackage_version)"
+            if [[ "$last_version" != "$subpackage_version" ]]; then
+              echo "Publishing $workspace with version $subpackage_version"
+              if [[ ! -z "$tag" ]]; then
+                yarn workspace $workspace npm publish --access public --tag $tag
+              else
+                yarn workspace $workspace npm publish --access public
+              fi
+            else
+              echo "Skipping $workspace as version $subpackage_version already exists"
+            fi
+          done
+
+      - name: Extract version, determine tag, and publish chain-abstraction
+        if: ${{ startsWith(github.ref, 'refs/tags/chain-abstraction-v') }}
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          workspaces=(
+            "packages/utils:@connext/nxtp-utils"
+            "packages/agents/chain-abstraction:@connext/chain-abstraction"
+          )
+
+          for entry in "${workspaces[@]}"; do
+            IFS=":"; read -ra split_entry <<< "$entry"
+            directory="${split_entry[0]}"
+            workspace="${split_entry[1]}"
+            subpackage_version=$(cat $directory/package.json | jq -r '.version')
+
+            tag=""
+            if [[ "$subpackage_version" == *"-alpha"* ]]; then
+              tag="alpha"
+            elif [[ "$subpackage_version" == *"-beta"* ]]; then
+              tag="beta"
+            fi
+
+            echo "Checking $workspace for existing version..."
+            npm_package_info=$(npm view $workspace versions --json)
+
+            if [[ -z "$tag" ]]; then
+              # "stable" is not explicitly in the version name for stable releases
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"-\") | not)" | tail -1)
+            else
+              # pre-release versions have the tag in the version name
+              base_version=$(echo "$subpackage_version" | sed 's/-.*//')
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"^${base_version}-${tag}\"))" | tail -1)
+            fi
+
+            echo "Compare version in NPM ($last_version) against local version ($subpackage_version)"
+            if [[ "$last_version" != "$subpackage_version" ]]; then
+              echo "Publishing $workspace with version $subpackage_version"
+              if [[ ! -z "$tag" ]]; then
+                yarn workspace $workspace npm publish --access public --tag $tag
+              else
+                yarn workspace $workspace npm publish --access public
+              fi
+            else
+              echo "Skipping $workspace as version $subpackage_version already exists"
+            fi
+          done
+
+      - name: Extract version, determine tag, and publish utils
+        if: ${{ startsWith(github.ref, 'refs/tags/utils-v') }}
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          workspaces=(
+            "packages/utils:@connext/nxtp-utils"
+          )
+
+          for entry in "${workspaces[@]}"; do
+            IFS=":"; read -ra split_entry <<< "$entry"
+            directory="${split_entry[0]}"
+            workspace="${split_entry[1]}"
+            subpackage_version=$(cat $directory/package.json | jq -r '.version')
+
+            tag=""
+            if [[ "$subpackage_version" == *"-alpha"* ]]; then
+              tag="alpha"
+            elif [[ "$subpackage_version" == *"-beta"* ]]; then
+              tag="beta"
+            fi
+
+            echo "Checking $workspace for existing version..."
+            npm_package_info=$(npm view $workspace versions --json)
+
+            if [[ -z "$tag" ]]; then
+              # "stable" is not explicitly in the version name for stable releases
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"-\") | not)" | tail -1)
+            else
+              # pre-release versions have the tag in the version name
+              base_version=$(echo "$subpackage_version" | sed 's/-.*//')
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"^${base_version}-${tag}\"))" | tail -1)
+            fi
+
+            echo "Compare version in NPM ($last_version) against local version ($subpackage_version)"
+            if [[ "$last_version" != "$subpackage_version" ]]; then
+              echo "Publishing $workspace with version $subpackage_version"
+              if [[ ! -z "$tag" ]]; then
+                yarn workspace $workspace npm publish --access public --tag $tag
+              else
+                yarn workspace $workspace npm publish --access public
+              fi
+            else
+              echo "Skipping $workspace as version $subpackage_version already exists"
+            fi
+          done
+
+      - name: Extract version, determine tag, and publish nxtp-adapters-subgraph
+        if: ${{ startsWith(github.ref, 'refs/tags/subgraph-v') }}
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          workspaces=(
+            "packages/adapters/subgraph:@connext/nxtp-adapters-subgraph"
+          )
+
+          for entry in "${workspaces[@]}"; do
+            IFS=":"; read -ra split_entry <<< "$entry"
+            directory="${split_entry[0]}"
+            workspace="${split_entry[1]}"
+            subpackage_version=$(cat $directory/package.json | jq -r '.version')
+
+            tag=""
+            if [[ "$subpackage_version" == *"-alpha"* ]]; then
+              tag="alpha"
+            elif [[ "$subpackage_version" == *"-beta"* ]]; then
+              tag="beta"
+            fi
+
+            echo "Checking $workspace for existing version..."
+            npm_package_info=$(npm view $workspace versions --json)
+
+            if [[ -z "$tag" ]]; then
+              # "stable" is not explicitly in the version name for stable releases
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"-\") | not)" | tail -1)
+            else
+              # pre-release versions have the tag in the version name
+              base_version=$(echo "$subpackage_version" | sed 's/-.*//')
+              last_version=$(echo "$npm_package_info" | jq -r ".[] | select(test(\"^${base_version}-${tag}\"))" | tail -1)
+            fi
+
+            echo "Compare version in NPM ($last_version) against local version ($subpackage_version)"
+            if [[ "$last_version" != "$subpackage_version" ]]; then
+              echo "Publishing $workspace with version $subpackage_version"
+              if [[ ! -z "$tag" ]]; then
+                yarn workspace $workspace npm publish --access public --tag $tag
+              else
+                yarn workspace $workspace npm publish --access public
+              fi
+            else
+              echo "Skipping $workspace as version $subpackage_version already exists"
+            fi
+          done
+
+  build-and-push-router-publisher-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/router-publisher
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove router from version tag
+        id: remove-router
+        run: |
+          tag=${{ github.ref_name }}
+          if [[ $tag == *router-* ]]; then
+            new_tag=${tag/router-/}
+            echo "docker_tag=$new_tag" >> $GITHUB_OUTPUT
+          else
+            echo "docker_tag=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=raw,value=${{ steps.remove-router.outputs.docker_tag }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/router/publisher/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  build-and-push-router-subscriber-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/router-subscriber
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove router from version tag
+        id: remove-router
+        run: |
+          tag=${{ github.ref_name }}
+          if [[ $tag == *router-* ]]; then
+            new_tag=${tag/router-/}
+            echo "docker_tag=$new_tag" >> $GITHUB_OUTPUT
+          else
+            echo "docker_tag=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=raw,value=${{ steps.remove-router.outputs.docker_tag }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/router/subscriber/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  build-and-push-router-executor-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/router-executor
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove router from version tag
+        id: remove-router
+        run: |
+          tag=${{ github.ref_name }}
+          if [[ $tag == *router-* ]]; then
+            new_tag=${tag/router-/}
+            echo "docker_tag=$new_tag" >> $GITHUB_OUTPUT
+          else
+            echo "docker_tag=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=raw,value=${{ steps.remove-router.outputs.docker_tag }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/router/executor/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  build-and-push-sequencer-server-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/sequencer-server
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=semver,pattern={{raw}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/sequencer/server/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  build-and-push-sequencer-publisher-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/sequencer-publisher
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=semver,pattern={{raw}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/sequencer/publisher/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  build-and-push-sequencer-subscriber-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/sequencer-subscriber
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=semver,pattern={{raw}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/sequencer/subscriber/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  build-and-push-cartographer-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: 679752396206.dkr.ecr.us-east-1.amazonaws.com
+      IMAGE_TAG: ${{ github.ref_name }}-${{ github.sha }}
+      REPOSITORY: nxtp-cartographer
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Login to Private ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Avoids rate limits error on pulling from public ECR
+      - name: Login to Public ECR
+        uses: docker/login-action@v2
+        with:
+          registry: public.ecr.aws
+          username: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Log in to GH Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build, tag, and push docker image to Amazon ECR Public
+        run: |
+          docker build -f docker/cartographer/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t ghcr.io/connext/cartographer:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker push ghcr.io/connext/cartographer:$IMAGE_TAG
+
+  build-and-push-lighthouse-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: 679752396206.dkr.ecr.us-east-1.amazonaws.com
+      IMAGE_TAG: ${{ github.ref_name }}-${{ github.sha }}
+      REPOSITORY: nxtp-lighthouse
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Login to Private ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Avoids rate limits error on pulling from public ECR
+      - name: Login to Public ECR
+        uses: docker/login-action@v2
+        with:
+          registry: public.ecr.aws
+          username: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Log in to GH Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build, tag, and push docker image to Amazon ECR Public
+
+        run: |
+          DOCKER_BUILDKIT=1 docker build -f docker/lighthouse/lambda/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t ghcr.io/connext/lighthouse:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker push ghcr.io/connext/lighthouse:$IMAGE_TAG
+
+  build-and-push-lighthouse-prover-subscriber-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/lighthouse-subscriber
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=semver,pattern={{raw}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/lighthouse/subscriber/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  build-and-push-relayer-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/relayer
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=semver,pattern={{raw}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/relayer/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  build-and-push-watcher-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/watcher
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove watcher from version tag
+        id: remove-watcher
+        run: |
+          tag=${{ github.ref_name }}
+          if [[ $tag == *watcher-* ]]; then
+            new_tag=${tag/watcher-/}
+            echo "docker_tag=$new_tag" >> $GITHUB_OUTPUT
+          else
+            echo "docker_tag=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=raw,value=${{ steps.remove-watcher.outputs.docker_tag }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/watcher/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  build-and-push-sdk-server-image:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: connext/sdk-server
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove sdk-server from version tag
+        id: remove-sdk-server
+        run: |
+          tag=${{ github.ref_name }}
+          if [[ $tag == *watcher-* ]]; then
+            new_tag=${tag/sdk-server-/}
+            echo "docker_tag=$new_tag" >> $GITHUB_OUTPUT
+          else
+            echo "docker_tag=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short
+            type=raw,value=${{ steps.remove-sdk-server.outputs.docker_tag }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: docker/sdk-server/Dockerfile
+
+    outputs:
+      json: ${{ steps.meta.outputs.json }}
+
+  smoke-tests:
+    runs-on: ubuntu-latest
+    needs:
+      [
+        build-and-push-router-publisher-image,
+        build-and-push-router-subscriber-image,
+        build-and-push-router-executor-image,
+        build-and-push-sequencer-server-image,
+        build-and-push-sequencer-publisher-image,
+        build-and-push-sequencer-subscriber-image,
+        build-and-push-cartographer-image,
+        build-and-push-lighthouse-image,
+        build-and-push-lighthouse-prover-subscriber-image,
+        build-and-push-relayer-image,
+        build-and-push-watcher-image,
+        build-and-push-sdk-server-image,
+      ]
+    env:
+      ROUTER_PUBLISHER_IMAGE: ${{ fromJSON(needs.build-and-push-router-publisher-image.outputs.json).tags[0] }}
+      ROUTER_SUBSCRIBER_IMAGE: ${{ fromJSON(needs.build-and-push-router-subscriber-image.outputs.json).tags[0] }}
+      ROUTER_EXECUTOR_IMAGE: ${{fromJSON(needs.build-and-push-router-executor-image.outputs.json).tags[0]}}
+      SEQUENCER_SERVER_IMAGE: ${{ fromJSON(needs.build-and-push-sequencer-server-image.outputs.json).tags[0] }}
+      SEQUENCER_PUBLISHER_IMAGE: ${{ fromJSON(needs.build-and-push-sequencer-publisher-image.outputs.json).tags[0] }}
+      SEQUENCER_SUBSCRIBER_IMAGE: ${{ fromJSON(needs.build-and-push-sequencer-subscriber-image.outputs.json).tags[0] }}
+      CARTOGRAPHER_IMAGE: ghcr.io/connext/cartographer:${{ github.ref_name }}-${{ github.sha }}
+      LIGHTHOUSE_IMAGE: ghcr.io/connext/lighthouse:${{ github.ref_name }}-${{ github.sha }}
+      LIGHTHOUSE_PROVER_SUBSCRIBER_IMAGE: ${{ fromJSON(needs.build-and-push-lighthouse-prover-subscriber-image.outputs.json).tags[0] }}
+      RELAYER_IMAGE: ${{ fromJSON(needs.build-and-push-relayer-image.outputs.json).tags[0] }}
+      WATCHER_IMAGE: ${{ fromJSON(needs.build-and-push-watcher-image.outputs.json).tags[0] }}
+      SDK_SERVER_IMAGE: ${{ fromJSON(needs.build-and-push-sdk-server-image.outputs.json).tags[0] }}
+      WEB3_SIGNER_PRIVATE_KEY_ROUTER: "0xc88b703fb08cbea894b6aeff5a544fb92e78a18e19814cd85da83b71f772aa6c"
+      WEB3_SIGNER_PRIVATE_KEY_SEQUENCER: "0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f"
+      WEB3_SIGNER_PRIVATE_KEY_RELAYER: "0x0dbbe8e4ae425a6d2687f1a7e3ba17bc98c673636790f1b8ad91193c05875ef1"
+      WEB3_SIGNER_PRIVATE_KEY_WATCHER: "0x0dbbe8e4ae425a6d2687f1a7e3ba17bc98c673636790f1b8ad91193c05875ef1"
+      MNEMONIC: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+    steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: config setup
+        run: |
+          config_dir_paths=("docker/cartographer" "docker/lighthouse" "docker/router" "docker/sequencer" "docker/relayer" "docker/watcher")
+          for dir_path in "${config_dir_paths[@]}"; do
+              file_path="$dir_path/config.local.json"
+              file_target_path="$dir_path/config.json"
+              cp "$file_path" "$file_target_path"
+          done
+
+      - name: run smoke tests
+        run: |
+          docker-compose -f docker-compose.services.yaml -f docker-compose.chains.yaml up -d
+          bash docker/bin/wait-for-services.sh router-publisher
+          bash docker/bin/wait-for-services.sh router-subscriber
+          bash docker/bin/wait-for-services.sh sequencer-server
+          bash docker/bin/wait-for-services.sh sequencer-publisher
+          bash docker/bin/wait-for-services.sh sequencer-subscriber
+
+    outputs:
+      router-publisher-tags: ${{ needs.build-and-push-router-publisher-image.outputs.json }}
+      router-subscriber-tags: ${{ needs.build-and-push-router-subscriber-image.outputs.json }}
+      router-executor-tags: ${{ needs.build-and-push-router-executor-image.outputs.json }}
+      sequencer-server-tags: ${{ needs.build-and-push-sequencer-server-image.outputs.json }}
+      sequencer-publisher-tags: ${{ needs.build-and-push-sequencer-publisher-image.outputs.json }}
+      sequencer-subscriber-tags: ${{ needs.build-and-push-sequencer-subscriber-image.outputs.json }}
+      lighthouse-prover-subscriber-tags: ${{ needs.build-and-push-lighthouse-prover-subscriber-image.outputs.json }}
+      relayer-tags: ${{ needs.build-and-push-relayer-image.outputs.json }}
+      watcher-tags: ${{ needs.build-and-push-watcher-image.outputs.json }}
+      sdk-server-tags: ${{ needs.build-and-push-sdk-server-image.outputs.json }}
+
+  e2e-tests:
+    if: github.ref != 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    needs:
+      [
+        build-and-test,
+        build-and-push-router-publisher-image,
+        build-and-push-router-subscriber-image,
+        build-and-push-router-executor-image,
+        build-and-push-sequencer-server-image,
+        build-and-push-sequencer-publisher-image,
+        build-and-push-sequencer-subscriber-image,
+        build-and-push-cartographer-image,
+        build-and-push-lighthouse-image,
+        build-and-push-lighthouse-prover-subscriber-image,
+        build-and-push-relayer-image,
+        build-and-push-watcher-image,
+        build-and-push-sdk-server-image,
+      ]
+    env:
+      ROUTER_PUBLISHER_IMAGE: ${{ fromJSON(needs.build-and-push-router-publisher-image.outputs.json).tags[0] }}
+      ROUTER_SUBSCRIBER_IMAGE: ${{ fromJSON(needs.build-and-push-router-subscriber-image.outputs.json).tags[0] }}
+      ROUTER_EXECUTOR_IMAGE: ${{ fromJSON(needs.build-and-push-router-executor-image.outputs.json).tags[0] }}
+      SEQUENCER_SERVER_IMAGE: ${{ fromJSON(needs.build-and-push-sequencer-server-image.outputs.json).tags[0] }}
+      SEQUENCER_PUBLISHER_IMAGE: ${{ fromJSON(needs.build-and-push-sequencer-publisher-image.outputs.json).tags[0] }}
+      SEQUENCER_SUBSCRIBER_IMAGE: ${{ fromJSON(needs.build-and-push-sequencer-subscriber-image.outputs.json).tags[0] }}
+      LIGHTHOUSE_IMAGE: ghcr.io/connext/lighthouse:${{ github.ref_name }}-${{ github.sha }}
+      LIGHTHOUSE_PROVER_SUBSCRIBER_IMAGE: ${{ fromJSON(needs.build-and-push-lighthouse-prover-subscriber-image.outputs.json).tags[0] }}
+      RELAYER_IMAGE: ${{ fromJSON(needs.build-and-push-relayer-image.outputs.json).tags[0] }}
+      WATCHER_IMAGE: ${{ fromJSON(needs.build-and-push-watcher-image.outputs.json).tags[0] }}
+      WEB3_SIGNER_PRIVATE_KEY_ROUTER: "0xc88b703fb08cbea894b6aeff5a544fb92e78a18e19814cd85da83b71f772aa6c"
+      WEB3_SIGNER_PRIVATE_KEY_SEQUENCER: "0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f"
+      WEB3_SIGNER_PRIVATE_KEY_RELAYER: "0x0dbbe8e4ae425a6d2687f1a7e3ba17bc98c673636790f1b8ad91193c05875ef1"
+      MNEMONIC: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Yarn build
+        run: yarn build:all
+
+      # TODO ADD THIS BACK IN
+      # - name: Integration Tests
+      # run: yarn test:integration
+
+    outputs:
+      router-publisher-tags: ${{ needs.build-and-push-router-publisher-image.outputs.json }}
+      router-subscriber-tags: ${{ needs.build-and-push-router-subscriber-image.outputs.json }}
+      router-executor-tags: ${{ needs.build-and-push-router-executor-image.outputs.json }}
+      sequencer-server-tags: ${{ needs.build-and-push-sequencer-server-image.outputs.json }}
+      sequencer-publisher-tags: ${{ needs.build-and-push-sequencer-publisher-image.outputs.json }}
+      sequencer-subscriber-tags: ${{ needs.build-and-push-sequencer-subscriber-image.outputs.json }}
+      lighthouse-prover-subscriber-tags: ${{ needs.build-and-push-lighthouse-prover-subscriber-image.outputs.json }}
+      relayer-tags: ${{ needs.build-and-push-relayer-image.outputs.json }}
+      watcher-tags: ${{ needs.build-and-push-watcher-image.outputs.json }}
+      sdk-server-tags: ${{ needs.build-and-push-sdk-server-image.outputs.json }}
+
+  terraform-infra:
+    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    runs-on: ubuntu-latest
+    needs: [smoke-tests]
+    env:
+      AWS_PROFILE: aws-deployer-connext
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.7
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: Fooji/create-aws-profile-action@v1
+        with:
+          profile: aws-deployer-connext
+          region: us-east-1
+          key: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          secret: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./ops/infra
+        run: terraform init
+
+      - name: Terraform Deploy Infra
+        id: apply
+        working-directory: ./ops/infra
+        run: |
+          terraform apply -auto-approve
+
+  terraform-services-backend-staging-testnet:
+    needs: [smoke-tests, terraform-infra]
+    env:
+      AWS_PROFILE: aws-deployer-connext
+      TF_VAR_cartographer_image_tag: ${{ github.ref_name }}-${{ github.sha }}
+      TF_VAR_full_image_name_sdk_server: ${{ fromJSON(needs.smoke-tests.outputs.sdk-server-tags).tags[0] }}
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.7
+
+      - name: Setup Sops
+        uses: mdgreenwald/mozilla-sops-action@v1.2.0
+        with:
+          version: "3.7.2"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: Fooji/create-aws-profile-action@v1
+        with:
+          profile: aws-deployer-connext
+          region: us-east-1
+          key: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          secret: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Decrypt Testnet Secrets
+        id: decrypt
+        run: sops -d ops/env/testnet/backend/secrets.staging.json > ops/testnet/staging/backend/tfvars.json
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./ops/testnet/staging/backend
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ./ops/testnet/staging/backend
+        run: |
+          terraform plan -var-file=tfvars.json
+
+      - name: Terraform Docker Image onto AWS
+        if: github.ref == 'refs/heads/staging'
+        id: apply
+        working-directory: ./ops/testnet/staging/backend
+        run: |
+          terraform apply -var-file=tfvars.json -auto-approve
+
+  terraform-services-core-staging-testnet:
+    needs: [smoke-tests, terraform-infra]
+    env:
+      AWS_PROFILE: aws-deployer-connext
+      TF_VAR_full_image_name_router_publisher: ${{ fromJSON(needs.smoke-tests.outputs.router-publisher-tags).tags[0] }}
+      TF_VAR_full_image_name_router_subscriber: ${{ fromJSON(needs.smoke-tests.outputs.router-subscriber-tags).tags[0] }}
+      TF_VAR_full_image_name_router_executor: ${{ fromJSON(needs.smoke-tests.outputs.router-executor-tags).tags[0] }}
+      TF_VAR_full_image_name_sequencer_server: ${{ fromJSON(needs.smoke-tests.outputs.sequencer-server-tags).tags[0] }}
+      TF_VAR_full_image_name_sequencer_publisher: ${{ fromJSON(needs.smoke-tests.outputs.sequencer-publisher-tags).tags[0] }}
+      TF_VAR_full_image_name_sequencer_subscriber: ${{ fromJSON(needs.smoke-tests.outputs.sequencer-subscriber-tags).tags[0] }}
+      TF_VAR_full_image_name_watcher: ${{ fromJSON(needs.smoke-tests.outputs.watcher-tags).tags[0] }}
+      TF_VAR_full_image_name_relayer: ${{ fromJSON(needs.smoke-tests.outputs.relayer-tags).tags[0] }}
+      TF_VAR_full_image_name_lighthouse_prover_subscriber: ${{ fromJSON(needs.smoke-tests.outputs.lighthouse-prover-subscriber-tags).tags[0] }}
+      TF_VAR_lighthouse_image_tag: ${{ github.ref_name }}-${{ github.sha }}
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.7
+
+      - name: Setup Sops
+        uses: mdgreenwald/mozilla-sops-action@v1.2.0
+        with:
+          version: "3.7.2"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: Fooji/create-aws-profile-action@v1
+        with:
+          profile: aws-deployer-connext
+          region: us-east-1
+          key: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          secret: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Decrypt Testnet Secrets
+        id: decrypt
+        run: sops -d ops/env/testnet/core/secrets.staging.json > ops/testnet/staging/core/tfvars.json
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./ops/testnet/staging/core
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ./ops/testnet/staging/core
+        run: |
+          terraform plan -var-file=tfvars.json
+
+      - name: Terraform Docker Image onto AWS
+        if: github.ref == 'refs/heads/staging'
+        id: apply
+        working-directory: ./ops/testnet/staging/core
+        run: |
+          terraform apply -var-file=tfvars.json -auto-approve
+
+    outputs:
+      sequencer-server-tags: ${{ needs.smoke-tests.outputs.sequencer-server-tags }}
+      sequencer-publisher-tags: ${{ needs.smoke-tests.outputs.sequencer-publisher-tags }}
+      sequencer-subscriber-tags: ${{ needs.smoke-tests.outputs.sequencer-subscriber-tags }}
+      lighthouse-prover-subscriber-tags: ${{ needs.smoke-tests.outputs.lighthouse-prover-subscriber-tags }}
+      router-publisher-tags: ${{ needs.smoke-tests.outputs.router-publisher-tags }}
+      router-subscriber-tags: ${{ needs.smoke-tests.outputs.router-subscriber-tags }}
+      router-executor-tags: ${{ needs.smoke-tests.outputs.router-executor-tags }}
+      relayer-tags: ${{ needs.smoke-tests.outputs.relayer-tags }}
+
+  terraform-services-core-prod-testnet:
+    if: github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    needs: [e2e-tests]
+    env:
+      AWS_PROFILE: aws-deployer-connext
+      TF_VAR_full_image_name_router_publisher: ${{ fromJSON(needs.e2e-tests.outputs.router-publisher-tags).tags[0] }}
+      TF_VAR_full_image_name_router_subscriber: ${{ fromJSON(needs.e2e-tests.outputs.router-subscriber-tags).tags[0] }}
+      TF_VAR_full_image_name_router_executor: ${{ fromJSON(needs.e2e-tests.outputs.router-executor-tags).tags[0] }}
+      TF_VAR_full_image_name_sequencer_server: ${{ fromJSON(needs.e2e-tests.outputs.sequencer-server-tags).tags[0] }}
+      TF_VAR_full_image_name_sequencer_publisher: ${{ fromJSON(needs.e2e-tests.outputs.sequencer-publisher-tags).tags[0] }}
+      TF_VAR_full_image_name_sequencer_subscriber: ${{ fromJSON(needs.e2e-tests.outputs.sequencer-subscriber-tags).tags[0] }}
+      TF_VAR_full_image_name_relayer: ${{ fromJSON(needs.e2e-tests.outputs.relayer-tags).tags[0] }}
+      TF_VAR_full_image_name_watcher: ${{ fromJSON(needs.e2e-tests.outputs.watcher-tags).tags[0] }}
+      TF_VAR_full_image_name_lighthouse_prover_subscriber: ${{ fromJSON(needs.e2e-tests.outputs.lighthouse-prover-subscriber-tags).tags[0] }}
+      TF_VAR_lighthouse_image_tag: ${{ github.ref_name }}-${{ github.sha }}
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.7
+
+      - name: Setup Sops
+        uses: mdgreenwald/mozilla-sops-action@v1.2.0
+        with:
+          version: "3.7.2"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: Fooji/create-aws-profile-action@v1
+        with:
+          profile: aws-deployer-connext
+          region: us-east-1
+          key: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          secret: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Decrypt Testnet Production Secrets
+        id: decrypt
+        run: sops -d ops/env/testnet/core/secrets.prod.json > ops/testnet/prod/core/tfvars.json
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./ops/testnet/prod/core
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ./ops/testnet/prod/core
+        run: |
+          terraform plan -var-file=tfvars.json
+
+      - name: Terraform Docker Image onto AWS
+        id: apply
+        working-directory: ./ops/testnet/prod/core
+        run: |
+          terraform apply -var-file=tfvars.json -auto-approve
+
+    outputs:
+      sequencer-server-tags: ${{ needs.e2e-tests.outputs.sequencer-server-tags }}
+      sequencer-publisher-tags: ${{ needs.e2e-tests.outputs.sequencer-publisher-tags }}
+      sequencer-subscriber-tags: ${{ needs.e2e-tests.outputs.sequencer-subscriber-tags }}
+      lighthouse-prover-subscriber-tags: ${{ needs.e2e-tests.outputs.lighthouse-prover-subscriber-tags }}
+      router-publisher-tags: ${{ needs.e2e-tests.outputs.router-publisher-tags }}
+      router-subscriber-tags: ${{ needs.e2e-tests.outputs.router-subscriber-tags }}
+      router-executor-tags: ${{ needs.e2e-tests.outputs.router-executor-tags }}
+      relayer-tags: ${{ needs.e2e-tests.outputs.relayer-tags }}
+      watcher-tags: ${{ needs.e2e-tests.outputs.watcher-tags }}
+      sdk-server-tags: ${{ needs.e2e-tests.outputs.sdk-server-tags }}
+
+  terraform-services-backend-prod-testnet:
+    if: github.ref == 'refs/heads/testnet-prod' || github.ref == 'refs/heads/prod'
+    needs: [e2e-tests]
+    env:
+      AWS_PROFILE: aws-deployer-connext
+      TF_VAR_cartographer_image_tag: ${{ github.ref_name }}-${{ github.sha }}
+      TF_VAR_full_image_name_sdk_server: ${{ fromJSON(needs.e2e-tests.outputs.sdk-server-tags).tags[0] }}
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.7
+
+      - name: Setup Sops
+        uses: mdgreenwald/mozilla-sops-action@v1.2.0
+        with:
+          version: "3.7.2"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: Fooji/create-aws-profile-action@v1
+        with:
+          profile: aws-deployer-connext
+          region: us-east-1
+          key: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          secret: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Decrypt Testnet Secrets
+        id: decrypt
+        run: sops -d ops/env/testnet/backend/secrets.prod.json > ops/testnet/prod/backend/tfvars.json
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./ops/testnet/prod/backend
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ./ops/testnet/prod/backend
+        run: |
+          terraform plan -var-file=tfvars.json
+
+      - name: Terraform Docker Image onto AWS
+        id: apply
+        working-directory: ./ops/testnet/prod/backend
+        run: |
+          terraform apply -var-file=tfvars.json -auto-approve
+
+    outputs:
+      sequencer-server-tags: ${{ needs.e2e-tests.outputs.sequencer-server-tags }}
+      sequencer-publisher-tags: ${{ needs.e2e-tests.outputs.sequencer-publisher-tags }}
+      sequencer-subscriber-tags: ${{ needs.e2e-tests.outputs.sequencer-subscriber-tags }}
+      router-publisher-tags: ${{ needs.e2e-tests.outputs.router-publisher-tags }}
+      router-subscriber-tags: ${{ needs.e2e-tests.outputs.router-subscriber-tags }}
+      router-executor-tags: ${{ needs.e2e-tests.outputs.router-executor-tags }}
+      lighthouse-prover-subscriber-tags: ${{ needs.e2e-tests.outputs.lighthouse-prover-subscriber-tags }}
+      relayer-tags: ${{ needs.e2e-tests.outputs.relayer-tags }}
+      watcher-tags: ${{ needs.e2e-tests.outputs.watcher-tags }}
+      sdk-server-tags: ${{ needs.e2e-tests.outputs.sdk-server-tags }}
+
+  terraform-services-backend-prod-mainnet:
+    if: github.ref == 'refs/heads/prod'
+    needs: [terraform-services-core-prod-testnet, terraform-services-backend-prod-testnet]
+    env:
+      AWS_PROFILE: aws-deployer-connext
+      TF_VAR_cartographer_image_tag: ${{ github.ref_name }}-${{ github.sha }}
+      TF_VAR_full_image_name_sdk_server: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.sdk-server-tags).tags[0] }}
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.7
+
+      - name: Setup Sops
+        uses: mdgreenwald/mozilla-sops-action@v1.2.0
+        with:
+          version: "3.7.2"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: Fooji/create-aws-profile-action@v1
+        with:
+          profile: aws-deployer-connext
+          region: us-east-1
+          key: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          secret: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Decrypt Mainnet Secrets
+        id: decrypt
+        run: sops -d ops/env/mainnet/backend/secrets.prod.json > ops/mainnet/prod/backend/tfvars.json
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./ops/mainnet/prod/backend
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ./ops/mainnet/prod/backend
+        run: |
+          terraform plan -var-file=tfvars.json
+
+      - name: Terraform Docker Image onto AWS
+        id: apply
+        working-directory: ./ops/mainnet/prod/backend
+        run: |
+          terraform apply -var-file=tfvars.json -auto-approve
+
+  terraform-services-core-prod-mainnet:
+    if: github.ref == 'refs/heads/prod'
+    needs: [terraform-services-core-prod-testnet, terraform-services-backend-prod-testnet]
+    env:
+      AWS_PROFILE: aws-deployer-connext
+      TF_VAR_full_image_name_router_publisher: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.router-publisher-tags).tags[0] }}
+      TF_VAR_full_image_name_router_subscriber: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.router-subscriber-tags).tags[0] }}
+      TF_VAR_full_image_name_router_executor: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.router-executor-tags).tags[0] }}
+      TF_VAR_full_image_name_sequencer_server: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.sequencer-server-tags).tags[0] }}
+      TF_VAR_full_image_name_sequencer_publisher: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.sequencer-publisher-tags).tags[0] }}
+      TF_VAR_full_image_name_sequencer_subscriber: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.sequencer-subscriber-tags).tags[0] }}
+      TF_VAR_full_image_name_relayer: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.relayer-tags).tags[0] }}
+      TF_VAR_full_image_name_watcher: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.watcher-tags).tags[0] }}
+      TF_VAR_full_image_name_lighthouse_prover_subscriber: ${{ fromJSON(needs.terraform-services-backend-prod-testnet.outputs.lighthouse-prover-subscriber-tags).tags[0] }}
+      TF_VAR_lighthouse_image_tag: ${{ github.ref_name }}-${{ github.sha }}
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.7
+
+      - name: Setup Sops
+        uses: mdgreenwald/mozilla-sops-action@v1.2.0
+        with:
+          version: "3.7.2"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: Fooji/create-aws-profile-action@v1
+        with:
+          profile: aws-deployer-connext
+          region: us-east-1
+          key: ${{ secrets.DEPLOYER_AWS_ACCESS_KEY_ID }}
+          secret: ${{ secrets.DEPLOYER_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Decrypt Testnet Production Secrets
+        id: decrypt
+        run: sops -d ops/env/mainnet/core/secrets.prod.json > ops/mainnet/prod/core/tfvars.json
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./ops/mainnet/prod/core
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ./ops/mainnet/prod/core
+        run: |
+          terraform plan -var-file=tfvars.json
+
+      - name: Terraform Docker Image onto AWS
+        id: apply
+        working-directory: ./ops/mainnet/prod/core
+        run: |
+          terraform apply -var-file=tfvars.json -auto-approve

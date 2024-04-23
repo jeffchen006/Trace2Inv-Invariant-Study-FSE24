@@ -1,0 +1,5 @@
+{
+  "extends": "../../../.nycrc.json",
+  "exclude": ["src/index.ts", "src/lib/caches/cache.ts", "test/**/*.spec.ts"],
+  "all": true
+}

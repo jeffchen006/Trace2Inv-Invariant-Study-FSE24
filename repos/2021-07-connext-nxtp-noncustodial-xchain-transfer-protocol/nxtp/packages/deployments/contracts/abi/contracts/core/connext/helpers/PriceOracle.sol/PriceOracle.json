@@ -1,0 +1,4 @@
+[
+  "function getTokenPrice(address token) view returns (uint256, uint256)",
+  "function isPriceOracle() view returns (bool)"
+]

@@ -1,0 +1,4 @@
+[
+  "function getPriceFromChainlink(address token) view returns (uint256)",
+  "function getTokenPrice(address token) view returns (uint256)"
+]

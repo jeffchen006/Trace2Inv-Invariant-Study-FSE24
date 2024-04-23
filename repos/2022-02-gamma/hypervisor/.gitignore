@@ -1,0 +1,18 @@
+*.*
+node_modules
+
+# include only following dirs/files
+!/audits/**
+!/contracts/**
+!/patches/**
+!/scripts/**
+!/tasks/**
+!/test/**
+!/.gitignore
+!/.env.example
+!/hardhat.config.ts
+!/LICENSE
+!/package.json
+!/yarn.lock
+!/README.md
+!/tsconfig.json

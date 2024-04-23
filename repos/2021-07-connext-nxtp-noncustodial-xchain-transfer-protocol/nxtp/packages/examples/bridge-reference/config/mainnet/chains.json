@@ -1,0 +1,195 @@
+[
+  {
+    "id": "ethereum",
+    "chain_id": 1,
+    "domain_id": "6648936",
+    "name": "Ethereum",
+    "short_name": "ETH",
+    "provider_params": [
+      {
+        "chainId": "0x1",
+        "chainName": "Ethereum",
+        "rpcUrls": ["https://rpc.ankr.com/eth", "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"],
+        "nativeCurrency": {
+          "name": "Ethereum",
+          "symbol": "ETH",
+          "decimals": 18
+        },
+        "blockExplorerUrls": ["https://etherscan.io"]
+      }
+    ],
+    "explorer": {
+      "name": "Etherscan",
+      "url": "https://etherscan.io",
+      "icon": "/logos/explorers/etherscan.png",
+      "block_path": "/block/{block}",
+      "address_path": "/address/{address}",
+      "contract_path": "/token/{address}",
+      "contract_0_path": "/address/{address}",
+      "transaction_path": "/tx/{tx}"
+    },
+    "image": "/logos/chains/ethereum.png",
+    "color": "#c0c2c3",
+    "group": "evm"
+  },
+  {
+    "id": "binance",
+    "chain_id": 56,
+    "name": "BNB Chain",
+    "short_name": "BNB",
+    "provider_params": [
+      {
+        "chainId": "0x38",
+        "chainName": "BNB Chain",
+        "rpcUrls": ["https://rpc.ankr.com/bsc", "https://bsc-dataseed.binance.org"],
+        "nativeCurrency": {
+          "name": "BNB",
+          "symbol": "BNB",
+          "decimals": 18
+        },
+        "blockExplorerUrls": ["https://bscscan.com"]
+      }
+    ],
+    "explorer": {
+      "name": "BscScan",
+      "url": "https://bscscan.com",
+      "icon": "/logos/explorers/bscscan.png",
+      "block_path": "/block/{block}",
+      "address_path": "/address/{address}",
+      "contract_path": "/token/{address}",
+      "contract_0_path": "/address/{address}",
+      "transaction_path": "/tx/{tx}"
+    },
+    "image": "/logos/chains/binance.png",
+    "color": "#e8b30b",
+    "group": "evm"
+  },
+  {
+    "id": "polygon",
+    "chain_id": 137,
+    "name": "Polygon",
+    "short_name": "MATIC",
+    "provider_params": [
+      {
+        "chainId": "0x89",
+        "chainName": "Polygon",
+        "rpcUrls": ["https://rpc.ankr.com/polygon"],
+        "nativeCurrency": {
+          "name": "Polygon",
+          "symbol": "MATIC",
+          "decimals": 18
+        },
+        "blockExplorerUrls": ["https://polygonscan.com"]
+      }
+    ],
+    "explorer": {
+      "name": "Polygonscan",
+      "url": "https://polygonscan.com",
+      "icon": "/logos/explorers/polygonscan.png",
+      "block_path": "/block/{block}",
+      "address_path": "/address/{address}",
+      "contract_path": "/token/{address}",
+      "contract_0_path": "/address/{address}",
+      "transaction_path": "/tx/{tx}"
+    },
+    "image": "/logos/chains/polygon.png",
+    "color": "#8247e5",
+    "group": "evm"
+  },
+  {
+    "id": "optimism",
+    "chain_id": 10,
+    "name": "Optimism",
+    "short_name": "OPT",
+    "provider_params": [
+      {
+        "chainId": "0xa",
+        "chainName": "Optimism",
+        "rpcUrls": ["https://rpc.ankr.com/optimism", "https://mainnet.optimism.io"],
+        "nativeCurrency": {
+          "name": "Ethereum",
+          "symbol": "oETH",
+          "decimals": 18
+        },
+        "blockExplorerUrls": ["https://optimistic.etherscan.io"]
+      }
+    ],
+    "explorer": {
+      "name": "Etherscan",
+      "url": "https://optimistic.etherscan.io",
+      "icon": "/logos/explorers/optimism.png",
+      "block_path": "/block/{block}",
+      "address_path": "/address/{address}",
+      "contract_path": "/token/{address}",
+      "contract_0_path": "/address/{address}",
+      "transaction_path": "/tx/{tx}"
+    },
+    "image": "/logos/chains/optimism.png",
+    "color": "#dc2626",
+    "group": "optimistic_rollups"
+  },
+  {
+    "id": "arbitrum",
+    "chain_id": 42161,
+    "name": "Arbitrum",
+    "short_name": "ARB",
+    "provider_params": [
+      {
+        "chainId": "0xa4b1",
+        "chainName": "Arbitrum",
+        "rpcUrls": ["https://rpc.ankr.com/arbitrum", "https://arb1.arbitrum.io/rpc"],
+        "nativeCurrency": {
+          "name": "Ethereum",
+          "symbol": "aETH",
+          "decimals": 18
+        },
+        "blockExplorerUrls": ["https://arbiscan.io"]
+      }
+    ],
+    "explorer": {
+      "name": "Arbiscan",
+      "url": "https://arbiscan.io",
+      "icon": "/logos/explorers/arbiscan.png",
+      "block_path": "/block/{block}",
+      "address_path": "/address/{address}",
+      "contract_path": "/token/{address}",
+      "contract_0_path": "/address/{address}",
+      "transaction_path": "/tx/{tx}"
+    },
+    "image": "/logos/chains/arbitrum.png",
+    "color": "#28a0f0",
+    "group": "optimistic_rollups"
+  },
+  {
+    "id": "fantom",
+    "chain_id": 250,
+    "name": "Fantom",
+    "short_name": "FTM",
+    "provider_params": [
+      {
+        "chainId": "0xfa",
+        "chainName": "Fantom",
+        "rpcUrls": ["https://rpc.ankr.com/fantom", "https://rpc.ftm.tools"],
+        "nativeCurrency": {
+          "name": "Fantom",
+          "symbol": "FTM",
+          "decimals": 18
+        },
+        "blockExplorerUrls": ["https://ftmscan.com"]
+      }
+    ],
+    "explorer": {
+      "name": "FTMScan",
+      "url": "https://ftmscan.com",
+      "icon": "/logos/explorers/ftmscan.png",
+      "block_path": "/block/{block}",
+      "address_path": "/address/{address}",
+      "contract_path": "/token/{address}",
+      "contract_0_path": "/address/{address}",
+      "transaction_path": "/tx/{tx}"
+    },
+    "image": "/logos/chains/fantom.png",
+    "color": "#1869ff",
+    "group": "evm"
+  }
+]

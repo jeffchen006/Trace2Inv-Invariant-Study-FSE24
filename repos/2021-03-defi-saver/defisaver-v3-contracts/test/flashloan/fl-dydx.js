@@ -1,0 +1,18 @@
+const {
+    redeploy,
+} = require('../utils');
+const { dydxFLTest } = require('./fl-tests');
+
+describe.skip('FL-DyDx', function () {
+    this.timeout(60000);
+
+    before(async () => {
+        await redeploy('FLDyDx');
+        await redeploy('SendToken');
+        await redeploy('RecipeExecutor');
+    });
+
+    it('... should get DyDx flash loan', async () => {
+        await dydxFLTest();
+    });
+});

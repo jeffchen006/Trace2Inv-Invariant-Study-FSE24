@@ -1,0 +1,31 @@
+{
+  "name": "simple-multisig",
+  "version": "1.0.4",
+  "description": "Simple Ethereum multisig contract",
+  "main": "test/simplemultisig.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christianlundkvist/simple-multisig.git"
+  },
+  "keywords": [
+    "Ethereum",
+    "Wallet"
+  ],
+  "author": "christian.lundkvist@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/christianlundkvist/simple-multisig/issues"
+  },
+  "homepage": "https://github.com/christianlundkvist/simple-multisig#readme",
+  "devDependencies": {
+    "bluebird": "*",
+    "eth-lightwallet": "*",
+    "truffle": "^5.1.60"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "hub": "1735353714",
+  "supportedDomains": ["1735353714", "1734439522"],
+  "environment": "production",
+  "assets": [
+    {
+      "name": "TEST",
+      "canonical": {
+        "domain": "1735353714",
+        "address": "0x7ea6eA49B0b0Ae9c5db7907d139D9Cd3439862a1"
+      },
+      "representations": {	
+        "1735356532": {	
+          "local": "0x68Db1c8d85C09d546097C65ec7DCBFF4D6497CbF",	
+          "adopted": "0x68Db1c8d85C09d546097C65ec7DCBFF4D6497CbF"	
+        },	
+        "1734439522": {	
+          "local": "0xDC805eAaaBd6F68904cA706C221c72F8a8a68F9f",	
+          "adopted": "0xDC805eAaaBd6F68904cA706C221c72F8a8a68F9f"	
+        }	
+      }
+    },
+    {
+      "name": "WETH",
+      "canonical": {
+        "domain": "1735353714",
+        "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6"
+      },
+      "representations": {
+        "1735356532": {
+          "local": "0x39B061B7e41DE8B721f9aEcEB6b3f17ECB7ba63E",
+          "adopted": "0x4E283927E35b7118eA546Ef58Ea60bfF59E857DB"
+        }
+      }
+    }
+  ],
+  "agents": {
+    "watchers": {
+      "allowlist": ["0x2cfBF3D40F71ceed2997cACbafE9D31e630860CB"]
+    },
+    "routers": {
+      "allowlist": ["0xD2aD711861ab345977B7379c81165708C8717fF1"]
+    },
+    "sequencers": {
+      "allowlist": ["0x87D8bd5B49B69f93e226ecF0e87D5bEBc3f6359C"]
+    },
+    "relayers": {
+      "allowlist": ["0xaB0A8DCb1590C4565C35cC785dc25A0590398054", "0xCDdE9992Fb66038Dd8419b56149a75CC79Df133C"]
+    }
+  }
+}

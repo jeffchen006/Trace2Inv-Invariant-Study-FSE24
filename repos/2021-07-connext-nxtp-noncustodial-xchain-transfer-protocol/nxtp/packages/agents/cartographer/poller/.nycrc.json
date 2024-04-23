@@ -1,0 +1,30 @@
+{
+  "extends": "../../../../.nycrc.json",
+  "exclude": [
+    "test/**/*",
+    "src/shared.ts",
+    "src/config.ts",
+    "src/index.ts",
+    "src/run.ts",
+    "src/zapatos/schema.d.ts",
+    "src/entryMessages.ts",
+    "src/entryRouters.ts",
+    "src/entryRoots.ts",
+    "src/entryTransfers.ts",
+    "src/bindings/index.ts",
+    "src/bindings/routers/index.ts",
+    "src/bindings/messages/index.ts",
+    "src/bindings/transfers/index.ts",
+    "src/bindings/roots/index.ts",
+    "src/bindings/stableswap/index.ts",
+    "src/bindings/messagestatus/index.ts",
+    "src/bindings/prices/index.ts",
+    "src/lib/operations/index.ts",
+    "src/lib/operations/migrations.ts",
+    "src/pollers/index.ts",
+    "src/pollers/messagePoller.ts",
+    "src/pollers/routersPoller.ts",
+    "src/pollers/transfersPoller.ts",
+    "src/pollers/rootsPoller.ts"
+  ]
+}

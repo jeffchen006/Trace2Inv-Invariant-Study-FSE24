@@ -1,0 +1,12 @@
+[
+  "event MessageProcessed(bytes data, address caller)",
+  "event MessageSent(bytes data, bytes encodedData, address caller)",
+  "event OwnershipProposed(address indexed proposedOwner)",
+  "event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)",
+  "function acceptProposedOwner()",
+  "function owner() view returns (address owner_)",
+  "function processMessage(bytes _data)",
+  "function proposeNewOwner(address newlyProposed)",
+  "function proposed() view returns (address proposed_)",
+  "function verifySender(address _expected) returns (bool)"
+]

@@ -1,0 +1,1 @@
+export { bindSubscriber } from "./auctions";

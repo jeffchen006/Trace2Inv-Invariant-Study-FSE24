@@ -1,0 +1,50 @@
+const INFURA_API_KEY = "05aa70b19b7543f5bf120cbeb0a50dda";
+
+
+
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const { expect } = require('chai');
+const { setupLoader } = require('@openzeppelin/contract-loader');
+
+const PrivateKeyProvider = require("truffle-privatekey-provider");
+const { BN } = require('@openzeppelin/test-helpers');
+
+const Web3 = require('web3');
+const  {deployer, privateOwner, privateSender} = require("../secret");
+
+
+const provider = new HDWalletProvider(privateSender, "https://rinkeby.infura.io/v3/" + INFURA_API_KEY);
+const web3 = new Web3(provider);
+
+const owner = web3.eth.accounts.privateKeyToAccount(privateOwner);
+const sender = web3.eth.accounts.privateKeyToAccount(privateSender);
+
+console.log(sender.address);
+const ERC20WrapperGluwacoin = artifacts.require('ERC20WrapperGluwacoin');
+
+
+const loader = setupLoader({ provider: web3 }).web3;
+const usdcToken = loader.fromArtifact("ERC20Upgradeable", "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b");
+const instance = loader.fromArtifact("ERC20WrapperGluwacoin", "0x3174E345C44B99C955e44A720868CE1288456a81");
+
+const mint_amount = new BN("10000000");
+const mint_fee = new BN("1");
+var sign = require('./signature');
+
+console.log("instance " + usdcToken.address);
+
+
+describe('ER20WrapperGluwacoin.post.deployment', async function () {
+    it('Basic ETHless mint', async function () {
+        var nonce = Date.now();
+        var signature = sign.signWrapper(2, 1, instance.address, owner.address, privateOwner, mint_amount, mint_fee, nonce);
+        var wrapper = await instance.getRoleMember(WRAPPER_ROLE, 0);
+
+        await usdcToken.approve(instance.address, mint_amount, { from: owner });
+        await instance.methods['mint(address,uint256,uint256,uint256,bytes)'](owner.address, mint_amount, mint_fee, nonce, signature, { from: sender });
+
+        expect(await instance.balanceOf(owner.address)).to.be.bignumber.equal(mint_amount.sub(mint_fee));
+        expect(await instance.balanceOf(wrapper)).to.be.bignumber.equal(mint_fee);
+        expect(await instance.totalSupply()).to.be.bignumber.equal(mint_amount);
+    });
+});

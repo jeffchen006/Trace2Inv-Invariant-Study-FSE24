@@ -1,0 +1,10 @@
+lib
+deps
+.nyc_output
+generated-artifacts/
+generated-wrappers/
+foundry-artifacts/
+out/
+cache/
+package.json
+packages

@@ -1,0 +1,23 @@
+[
+  "error BaseConnextFacet__getAdoptedAsset_assetNotFound()",
+  "error BaseConnextFacet__getApprovedCanonicalId_notAllowlisted()",
+  "error BaseConnextFacet__nonReentrant_reentrantCall()",
+  "error BaseConnextFacet__nonXCallReentrant_reentrantCall()",
+  "error BaseConnextFacet__onlyOwnerOrAdmin_notOwnerOrAdmin()",
+  "error BaseConnextFacet__onlyOwnerOrRouter_notOwnerOrRouter()",
+  "error BaseConnextFacet__onlyOwnerOrWatcher_notOwnerOrWatcher()",
+  "error BaseConnextFacet__onlyOwner_notOwner()",
+  "error BaseConnextFacet__onlyProposed_notProposedOwner()",
+  "error BaseConnextFacet__whenNotPaused_paused()",
+  "error RelayerFacet__addRelayer_alreadyApproved()",
+  "error RelayerFacet__removeRelayer_notApproved()",
+  "error RelayerFacet__setRelayerFeeVault_invalidRelayerFeeVault()",
+  "event RelayerAdded(address relayer, address caller)",
+  "event RelayerFeeVaultUpdated(address oldVault, address newVault, address caller)",
+  "event RelayerRemoved(address relayer, address caller)",
+  "function addRelayer(address _relayer)",
+  "function approvedRelayers(address _relayer) view returns (bool)",
+  "function relayerFeeVault() view returns (address)",
+  "function removeRelayer(address _relayer)",
+  "function setRelayerFeeVault(address _relayerFeeVault)"
+]

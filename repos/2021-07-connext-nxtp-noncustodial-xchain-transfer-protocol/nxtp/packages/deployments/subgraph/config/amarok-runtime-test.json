@@ -1,0 +1,23 @@
+[
+  {
+    "subgraphName": "connext/nxtp-amarok-runtime-staging-goerli",
+    "network": "goerli",
+    "source": [
+      {
+        "name": "Connext",
+        "address": "0x096aC65AD03Ba3670822A24430E4B500D9A3F0Ea",
+        "startBlock": 8107134
+      },
+      {
+        "name": "Connector",
+        "address": "0x9741a6c445cfb3fe7d3d88323cc26e891463b5cb",
+        "startBlock": 8132571
+      },
+      {
+        "name": "MerkleTreeManager",
+        "address": "0xc41DFb64A2a04A9e8A09211F553718Baffb5A07F",
+        "startBlock": 25318421
+      }
+    ]
+  }
+]

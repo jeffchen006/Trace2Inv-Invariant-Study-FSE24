@@ -1,0 +1,17 @@
+{
+  "extends": "../../.nycrc.json",
+  "exclude": [
+    "src/index.ts",
+    "src/constants/*.ts",
+    "src/logging/*.ts",
+    "src/mocks/*.ts",
+    "src/types/*.ts",
+    "src/ethers/*.ts",
+    "test/**/*.ts",
+    "src/helpers/env.ts",
+    "src/helpers/time.ts",
+    "src/helpers/axios.ts",
+    "src/peripherals/errors.ts"
+  ],
+  "all": true
+}

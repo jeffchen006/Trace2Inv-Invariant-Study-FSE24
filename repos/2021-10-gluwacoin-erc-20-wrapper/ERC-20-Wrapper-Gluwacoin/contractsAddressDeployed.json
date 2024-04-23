@@ -1,0 +1,86 @@
+[
+  {
+    "name": "ERC20WrapperGluwacoin",
+    "address": "0x000CC169848eC63466A7EfB59e1b925ABAb5F92b",
+    "network": "goerli",
+    "deployer": "0x84eA16043bbFd8916Cb2c764CD858DB0C8b8a6F4",
+    "deploymentDate": "2022-06-21T16:08:46.481Z",
+    "blockHah": "0x466ae48fdd359accf930f486a010b88500003d783a6b058cf5572dffe2790538",
+    "blockNumber": 7098068
+  },
+  {
+    "name": "ProxyAdmin",
+    "address": "0x649F87cac8AD7eA1829c3eB24eFbdB423dC002E6",
+    "network": "goerli",
+    "deployer": "0x84eA16043bbFd8916Cb2c764CD858DB0C8b8a6F4",
+    "deploymentDate": "2022-06-21T16:08:46.680Z",
+    "blockHah": "",
+    "blockNumber": 0
+  },
+  {
+    "name": "ERC20WrapperGluwacoin",
+    "address": "0x396E2ce243010EE6e039cD9D146ACF27D351576F",
+    "network": "sepolia",
+    "deployer": "0x30Ab12D7254ee06bc856b30a0524D3e77c89F4C8",
+    "deploymentDate": "Thu Mar 23 2023 22:40:01 GMT-0400 (Eastern Daylight Saving Time)",
+    "chainId": "0xf629dfdb271dbea182cde95c7cf84587f1ae7c0360c2fc4a4d25c6bc99e3636e",
+    "blockHash": 3151220,
+    "blockNumber": 0,
+    "tag": {
+      "initializeArguments": [
+        "USDC Gluwacoin",
+        "USDC-G",
+        6,
+        "0x30Ab12D7254ee06bc856b30a0524D3e77c89F4C8",
+        "0xdE9c2540efA08918BA212596AfBcA5B4ADcfF591"
+      ],
+      "initializeSignature": "initialize"
+    },
+    "extra": {}
+  },
+  {
+    "name": "ProxyAdmin",
+    "address": "0x87f035334aa657e012f336cb9782fdd122D7411e",
+    "network": "sepolia",
+    "deployer": "0x30Ab12D7254ee06bc856b30a0524D3e77c89F4C8",
+    "deploymentDate": "Thu Mar 23 2023 22:40:01 GMT-0400 (Eastern Daylight Saving Time)",
+    "chainId": 0,
+    "blockHash": "",
+    "blockNumber": 0,
+    "tag": "",
+    "extra": {}
+  },
+  {
+    "name": "ERC20WrapperGluwacoin",
+    "address": "0xCf813d5958b880413008A637D94db7538D1758eC",
+    "network": "zhejiang",
+    "deployer": "0x30Ab12D7254ee06bc856b30a0524D3e77c89F4C8",
+    "deploymentDate": "Thu Mar 23 2023 22:43:50 GMT-0400 (Eastern Daylight Saving Time)",
+    "chainId": "0x7fd54c49b43ed114e69c3c78fbea5216e9ce8a71e5fe36d16801c2dc82032999",
+    "blockHash": 345458,
+    "blockNumber": 0,
+    "tag": {
+      "initializeArguments": [
+        "USDC Gluwacoin",
+        "USDC-G",
+        6,
+        "0x30Ab12D7254ee06bc856b30a0524D3e77c89F4C8",
+        "0xcB9fc50b3D1b61CFe8555487795e8B4C8c8De15e"
+      ],
+      "initializeSignature": "initialize"
+    },
+    "extra": {}
+  },
+  {
+    "name": "ProxyAdmin",
+    "address": "0xDB669dBb27a8eB23FfA4bFF0110D9006465C1842",
+    "network": "zhejiang",
+    "deployer": "0x30Ab12D7254ee06bc856b30a0524D3e77c89F4C8",
+    "deploymentDate": "Thu Mar 23 2023 22:43:50 GMT-0400 (Eastern Daylight Saving Time)",
+    "chainId": 0,
+    "blockHash": "",
+    "blockNumber": 0,
+    "tag": "",
+    "extra": {}
+  }
+]

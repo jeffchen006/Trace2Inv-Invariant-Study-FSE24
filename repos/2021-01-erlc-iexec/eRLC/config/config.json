@@ -1,0 +1,13 @@
+{
+	"chains":
+	{
+		"1":       { "asset": "Token", "softcap": 400000e9 },
+		"3":       { "asset": "Token", "softcap": 0        },
+		"4":       { "asset": "Token", "softcap": 0        },
+		"5":       { "asset": "Token", "softcap": 0        },
+		"42":      { "asset": "Token", "softcap": 0        },
+		"133":     { "asset": "Native" },
+		"134":     { "asset": "Native" },
+		"default": { "asset": "Token" }
+	}
+}

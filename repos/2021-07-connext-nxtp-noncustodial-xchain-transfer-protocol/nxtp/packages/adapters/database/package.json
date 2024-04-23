@@ -1,0 +1,46 @@
+{
+  "name": "@connext/nxtp-adapters-database",
+  "version": "2.0.0",
+  "description": "adapter for handling communication with Redis cache for nxtp protocol",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "dev": "",
+    "start": "",
+    "lint": "eslint ./src --ext .ts --env node",
+    "lint:fix": "eslint ./src --ext .ts --env node --fix",
+    "test": "nyc ts-mocha --check-leaks --exit --timeout 120000 './test/**/*.spec.ts'",
+    "clean": "rimraf ./dist ./tsconfig.tsBuildInfo",
+    "build": "tsc --build ./tsconfig.build.json",
+    "verify": "yarn test && yarn clean && yarn build && yarn lint --max-warnings 0",
+    "purge": "yarn clean && rimraf ./coverage ./node_modules",
+    "tsp": "yarn run tsp:root \"$@\" --cwd $(pwd)",
+    "docker:start:postgres": "docker run --name cartographer-db --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=qwerty ghcr.io/connext/database:sha-fa66dca",
+    "zapatos": "zapatos",
+    "dbmate": "dbmate",
+    "version": "yarn version"
+  },
+  "eslintIgnore": [],
+  "author": "Connext",
+  "license": "ISC",
+  "dependencies": {
+    "@connext/nxtp-utils": "workspace:*",
+    "dbmate": "1.16.1",
+    "zapatos": "6.1.4"
+  },
+  "devDependencies": {
+    "@types/mocha": "10.0.1",
+    "eslint": "8.34.0",
+    "mocha": "10.2.0",
+    "nyc": "15.1.0",
+    "ts-mocha": "10.0.0",
+    "ts-node": "10.9.1",
+    "tslib": "2.5.0",
+    "typescript": "4.9.5"
+  },
+  "gitHead": "937a7cde93e6ac1e151c6374f48adf83d3fa4ec6",
+  "stableVersion": "2.0.0"
+}
