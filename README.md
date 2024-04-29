@@ -4,8 +4,11 @@ This repository contains the results of the study conducted in the paper "Demyst
 
 ## Repository Structure
 `audits/`: Contains the audit reports used in the study.
+
 `repos/`: Contains the code repos of smart contracts used in the study.
+
 `invariants_study/`: Contains the invariants we labeled and the code snippets where they were found.
+
 `displayStats.py`: A Python script to parse the files under `invariants_study/` and display the statistics of the study. The statistics are also listed below:
 
 
